@@ -22,3 +22,14 @@ class Roomtype:
     @max_guests.setter
     def max_guests(self, max_guests):
         self.__max_guests = max_guests
+
+class RoomType:
+    def __init__(self, room_typ_id:int, description:str, max_guests:int, price_per_night:float):
+        self.__room_typ = room_typ_id
+        self.__description = description
+        self.__max_guests = max_guests
+        self.__price_per_night = price_per_night
+
+    @property
+    def price_per_night(self):
+        return self.__price_per_night

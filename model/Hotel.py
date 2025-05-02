@@ -30,3 +30,5 @@ class Hotel:
     def adresse(self, adresse):
         self.__adresse = adresse
 
+def get_full_address(self):
+    return f"{self.__adresse.street}, {self.__adresse.zip_code} {self.__adresse.city}"

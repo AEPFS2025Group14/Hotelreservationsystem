@@ -39,3 +39,6 @@ class Room:
     @facility.setter
     def facility(self, facility):
         self.__facility = facility
+
+def get_total_price(self, nights: int) -> float:
+    return self.__room_type.get_price_per_night() * nights

@@ -62,4 +62,9 @@ class Booking:
     def total_amount(self, total_amount):
         self.__total_amount = total_amount
 
+from datetime import timedelta
+
+@property
+def duration(self):
+    return (self.__check_out_date - self.__check_in_date).days
 

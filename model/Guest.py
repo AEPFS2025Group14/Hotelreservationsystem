@@ -10,3 +10,6 @@ class Guest(Mensch):
 
 Gast1 = Guest(1, "Muster", "Max", 21, "max@muster")
 print(Gast1.guest_id)
+
+def get_full_name(self):
+    return f"{self.first_name} {self.last_name}"
