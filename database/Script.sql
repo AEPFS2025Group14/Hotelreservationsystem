@@ -160,3 +160,5 @@ VALUES (1, 1), -- Room 101 has WiFi
        (2, 1), -- Room 102 has WiFi
        (3, 3), -- Room 201 has Air Conditioning
        (4, 4); -- Room 301 has Mini Bar
+
+

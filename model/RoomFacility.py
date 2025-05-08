@@ -1,12 +1,7 @@
 class RoomFacility:
     def __init__(self, room_id: int, facility_id: int):
-        self.__room_id = room_id
-        self.__facility_id = facility_id
+        self.room_id = room_id
+        self.facility_id = facility_id
 
-    @property
-    def room_id(self):
-        return self.__room_id
-
-    @property
-    def facility_id(self):
-        return self.__facility_id
+    def __str__(self):
+        return f"RoomFacility(room_id={self.room_id}, facility_id={self.facility_id})"
