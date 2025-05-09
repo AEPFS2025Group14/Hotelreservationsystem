@@ -4,23 +4,23 @@ class Guest:
         if not guest_id:
             raise ValueError("Guest ID is required")
         if not isinstance(guest_id, int):
-            raise TypeError("Guest ID must be an integer")
+            raise ValueError("Guest ID must be an integer")
         if not last_name:
             raise ValueError("Last name is required")
         if not isinstance(last_name, str):
-            raise TypeError("Last name must be an string")
+            raise ValueError("Last name must be an string")
         if not first_name:
             raise ValueError("First name is required")
         if not isinstance(first_name, str):
-            raise TypeError("First name must be an string")
+            raise ValueError("First name must be an string")
         if not email:
             raise ValueError("Email is required")
         if isinstance(email, str):
-            raise TypeError("Email must be an string")
+            raise ValueError("Email must be an string")
         if not age:
             raise ValueError("Age is required")
         if isinstance(age, int):
-            raise TypeError("Age must be an integer")
+            raise ValueError("Age must be an integer")
 
         self.__guest_id : int = guest_id
         self.__last_name : str = last_name
@@ -44,7 +44,7 @@ class Guest:
         if not last_name:
             raise ValueError("Last name is required")
         if not isinstance(last_name, str):
-            raise TypeError("Last name must be an string")
+            raise ValueError("Last name must be an string")
         self.__last_name = last_name
 
     @property
@@ -56,7 +56,7 @@ class Guest:
         if not first_name:
             raise ValueError("First name is required")
         if not isinstance(first_name, str):
-            raise TypeError("First name must be an string")
+            raise ValueError("First name must be an string")
         self.__first_name = first_name
 
     @property
@@ -68,7 +68,7 @@ class Guest:
         if not email:
             raise ValueError("Email is required")
         if isinstance(email, str):
-            raise TypeError("Email must be an string")
+            raise ValueError("Email must be an string")
         self.__email = email
 
     @property
@@ -80,6 +80,6 @@ class Guest:
         if not age:
             raise ValueError("Age is required")
         if isinstance(age, int):
-            raise TypeError("Age must be an integer")
+            raise ValueError("Age must be an integer")
         self.__age = age
 

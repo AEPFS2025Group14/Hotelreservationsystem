@@ -24,7 +24,7 @@ class Hotel:
         self.__rooms: list[Room] = []
 
     def __repr__(self):
-        return f"Hotel(id={self.__hotel_id!r}, name={self.__name!r}, artist={self.__artist!r})"
+        return f"Hotel(id={self.__hotel_id!r}, name={self.__name!r}, artist={self.__artist!r}, adresse={self.__adresse!r})"
 
     @property
     def hotel_id(self) -> int:
