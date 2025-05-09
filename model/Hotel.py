@@ -71,18 +71,22 @@ class Hotel:
         return self.rooms.copy()
 
     def add_room(self, room: Room):
+        if not room:
+            raise ValueError("room is required")
         if not isinstance(room, Room):
             raise ValueError("room must be an instance of Room")
         if room not in self.__rooms:
             self.__rooms.append(room)
-            if room.hotel is not self:
-                room.hotel = self
+            room.hotel = self
 
     def remove_room(self, room: Room):
+        if not room:
+            raise ValueError("room is required")
+        if not isinstance(room, Room):
+            raise ValueError("room must be an instance of Room")
         if room in self.__rooms:
             self.__rooms.remove(room)
-            if room.hotel is self:
-                room.hotel = None
+            room.hotel = None
 
 
 

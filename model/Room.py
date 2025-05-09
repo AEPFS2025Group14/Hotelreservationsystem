@@ -2,7 +2,7 @@ from model import Facility
 from model import Hotel
 
 class Room:
-    def __init__(self, room_id:int, room_number: int, room_type:str, hotel: Hotel = None, facility: Facility = None):
+    def __init__(self, room_id:int, room_number: int, room_type:str, hotel: Hotel = None):
         if not room_id:
             raise ValueError("Room ID is required")
         if not int(room_number, int):
@@ -17,8 +17,7 @@ class Room:
             raise ValueError("Room type must be an string")
         if hotel is not None and not isinstance(hotel, Hotel):
             raise ValueError("Hotel must be an instance of Hotel")
-        if facility is not None and not isinstance(facility, Facility):
-            raise ValueError("Facility must be an instance of Facility")
+
 
 
         self.__room_id : int = room_id
@@ -65,20 +64,30 @@ class Room:
     def facility(self) -> list[Facility]:
         return self.__facility
 
-    @facility.setter
-    def facility(self, facility : list[Facility]) -> None:
+    def add_facility(self, facility: Facility) -> None:
         from model import Facility
-
-        if facility is None and not isinstance(facility, Facility):
+        if not facility:
+            raise ValueError("Facility is required")
+        if not isinstance(facility, Facility):
             raise ValueError("Facility must be an instance of Facility")
+        if facility not in self.__facility:
+            self.__facility.append(facility)
+            facility.__room = self
 
-        if self.__facility is not facility:
-            if self.__facility is not None:
-                self.__facility.remove_room(self)
-            self.__facility = facility
+    def remove_facility(self, facility: Facility) -> None:
+        from model import Facility
+        if not facility:
+            raise ValueError("Facility is required")
+        if not isinstance(facility, Facility):
+            raise ValueError("Facility must be an instance of Facility")
+        if facility in self.__facility:
+            self.__facility.remove(facility)
+            facility.room = None
 
-def get_total_price(self, nights: int) -> float:
-    return self.__room_type.get_price_per_night() * nights
+
+
+    def get_total_price(self, nights: int) -> float:
+        return self.__room_type.get_price_per_night() * nights
 
     @property
     def hotel(self) -> list[Hotel]:

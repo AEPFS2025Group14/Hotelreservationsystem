@@ -35,6 +35,7 @@ class Booking:
             guest.add_booking(self)
         if room is not None:
             room.add_booking(self)
+        self.__room : list[Room] = []
 
 
     def __repr__(self):
@@ -96,32 +97,49 @@ class Booking:
         self.__total_amount = total_amount
 
 
-@property
-def guest(self) -> Guest:
-    return self.__guest
+    @property
+    def guest(self) -> Guest:
+        return self.__guest
 
 
-@guest.setter
-def guest(self, guest) -> None:
-    if guest is None and not isinstance(guest, Guest):
-        raise ValueError("guest must be a Guest")
-    if self.__guest is not guest:
-        self.__guest.remove_booking(self)
-    self.__guest = guest
-    if guest is not None and self not in guest.bookings:
-        guest.add_booking(self)
+    @guest.setter
+    def guest(self, guest) -> None:
+        if guest is None and not isinstance(guest, Guest):
+            raise ValueError("guest must be a Guest")
+        if self.__guest is not guest:
+            self.__guest.remove_booking(self)
+        self.__guest = guest
+        if guest is not None and self not in guest.bookings:
+            guest.add_booking(self)
 
 
-@property
-def room(self):
-    return self.__room
+    @property
+    def room(self) -> list [Room]:
+        return self.__room
+
+    def add_room(self, room: Room) -> None:
+        from model import Room
+        if not room:
+            raise ValueError("room is required")
+        if not isinstance(room, Room):
+            raise ValueError("room must be a Room")
+        if room not in self.__room:
+            self.__room.append(room)
+            room.booking = self
+
+    def remove_room(self, room: Room) -> None:
+        from model import Room
+        if not room:
+            raise ValueError("room is required")
+        if not isinstance(room, Room):
+            raise ValueError("room must be a Room")
+        if room in self.__room:
+            self.__room.remove(room)
+            room.booking = None
 
 
-@room.setter
-def room(self, room):
-    self.__room = room
 
-@property
-def duration(self):
-    return (self.__check_out_date - self.__check_in_date).days
+    @property
+    def duration(self):
+        return (self.__check_out_date - self.__check_in_date).days
 
