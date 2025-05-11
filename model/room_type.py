@@ -1,4 +1,4 @@
-class Roomtype:
+class RoomType:
 
     def __init__(self, room_typ_id:int, description:str, max_guests:int, price_per_night:float):
         if not room_typ_id:

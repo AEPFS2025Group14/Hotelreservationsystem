@@ -1,5 +1,9 @@
-from model import Facility
-from model import Hotel
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .hotel import Hotel
+    from .facilities import Facility
 
 class Room:
     def __init__(self, room_id:int, room_number: int, room_type:str, hotel: Hotel = None):

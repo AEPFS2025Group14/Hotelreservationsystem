@@ -1,8 +1,14 @@
-from model.Room import Room
-from model.Address import Address
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .room import Room
+    from .address import Address
+
+
 
 class Hotel:
-    def __init__(self, hotel_id: int, name:str, stars:int, adresse:Address =None):
+    def __init__(self, hotel_id: int, name:str, stars:int, address:Address =None):
         if not hotel_id:
             raise ValueError("hotel_id is required")
         if not isinstance(hotel_id, int):
@@ -19,12 +25,11 @@ class Hotel:
         self.__hotel_id: int  = hotel_id
         self.__name: str = name
         self.__stars: int = stars
-        if adresse is not None:
-            self.addresse.add_addresse(self)
+        self.__address: Address = address
         self.__rooms: list[Room] = []
 
     def __repr__(self):
-        return f"Hotel(id={self.__hotel_id!r}, name={self.__name!r}, artist={self.__artist!r}, adresse={self.__adresse!r})"
+        return f"Hotel(id={self.__hotel_id!r}, name={self.__name!r})"
 
     @property
     def hotel_id(self) -> int:
@@ -55,20 +60,16 @@ class Hotel:
         self.__stars = stars
 
     @property
-    def adresse(self):
-        return self.__adresse
-    @adresse.setter
-    def adresse(self, adresse):
-        self.__adresse = adresse
+    def address(self):
+        return self.__address
+
+    @address.setter
+    def address(self, address):
+        self.__address = address
 
     @property
     def rooms(self) -> list[Room]:
         return self.__rooms
-
-    @rooms.setter
-    def rooms (self, room_id) -> None:
-        from model.Room import Room
-        return self.rooms.copy()
 
     def add_room(self, room: Room):
         if not room:
@@ -90,5 +91,5 @@ class Hotel:
 
 
 
-def get_full_address(self):
-    return f"{self.__adresse.street}, {self.__adresse.zip_code} {self.__adresse.city}"
+    def get_full_address(self):
+        return f"{self.__address.street}, {self.__address.zip_code} {self.__address.city}"

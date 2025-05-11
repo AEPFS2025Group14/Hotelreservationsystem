@@ -39,4 +39,4 @@ class RoomFacility:
 
 
 
-    raise ValueError("Room must be an instance of Room")
+    #raise ValueError("Room must be an instance of Room")
