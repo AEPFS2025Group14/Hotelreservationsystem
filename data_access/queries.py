@@ -1,36 +1,9 @@
 import sqlite3
 import pandas as pd
 
-DB_PATH = "database/hotel_reservation_sample.db"
-
-def search_hotels_by_city(city_name):
-    conn = sqlite3.connect(DB_PATH)
-    query = """
-    SELECT h.name, a.street, a.zip_code, a.city, h.stars
-    FROM Hotel h
-    JOIN Address a ON h.address_id = a.address_id
-    WHERE a.city = ?
-    """
-    df = pd.read_sql_query(query, conn, params=(city_name,))
-    conn.close()
-    return df
-
-import sqlite3
-import pandas as pd
+import model
 
 DB_PATH = "database/hotel_reservation_sample.db"
-
-def search_hotels_by_city(city):
-    conn = sqlite3.connect(DB_PATH)
-    query = """
-    SELECT h.hotel_id, h.name, h.stars, a.city, a.street, a.zip_code
-    FROM Hotel h
-    JOIN Address a ON h.address_id = a.address_id
-    WHERE a.city = ?
-    """
-    df = pd.read_sql_query(query, conn, params=(city,))
-    conn.close()
-    return df
 
 def get_available_rooms(hotel_id, check_in_date, check_out_date):
     conn = sqlite3.connect(DB_PATH)
@@ -48,7 +21,7 @@ def get_available_rooms(hotel_id, check_in_date, check_out_date):
         )
     )
     """
-    df = pd.read_sql_query(query, conn, params=(hotel_id, check_in_date, check_out_date))
+    df = pd.read_sql_query(query, conn, params=[hotel_id, check_in_date, check_out_date])
     conn.close()
     return df
 
@@ -103,7 +76,7 @@ def search_hotels_filtered(city, min_stars, guest_count, check_in, check_out):
           )
       )
     """
-    df = pd.read_sql_query(query, conn, params=(city, min_stars, guest_count, check_in, check_out))
+    df = pd.read_sql_query(query, conn, params=[city, min_stars, guest_count, check_in, check_out])
     conn.close()
     return df
 
@@ -191,7 +164,7 @@ def get_total_revenue_by_period(start_date, end_date):
       AND check_in_date >= ?
       AND check_out_date <= ?
     """
-    df = pd.read_sql_query(query, conn, params=(start_date, end_date))
+    df = pd.read_sql_query(query, conn, params=[start_date, end_date])
     conn.close()
     return df
 

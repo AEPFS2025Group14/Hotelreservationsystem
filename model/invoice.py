@@ -1,5 +1,5 @@
 from datetime import date
-from Booking import Booking
+from .booking import Booking
 from datetime import date
 
 class Invoice:
@@ -37,7 +37,7 @@ class Invoice:
 
     @booking.setter
     def booking(self, booking : Booking) -> None:
-        from Booking import Booking
+        from booking import Booking
         if booking is None and not isinstance(booking, Booking):
             raise ValueError("Booking is required")
         if self.__booking is not booking:
@@ -70,5 +70,3 @@ class Invoice:
         if not isinstance(total_amount, float):
             raise ValueError("Total amount is not a float")
         self.__total_amount = total_amount
-
-

@@ -1,7 +1,7 @@
-from datetime import date
-from Guest import Guest
-from Room import Room
-from datetime import datetime
+from datetime import date, datetime
+from .guest import Guest
+from .room import Room
+
 
 class Booking:
     def __init__(self, booking_id:int, check_in_date: date,check_out_date:date, is_cancelled:bool, total_amount:float, guest: Guest = None, room : Room = None):
