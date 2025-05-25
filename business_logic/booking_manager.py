@@ -1,16 +1,17 @@
 import os
 import pandas as pd
-
 import model
+from datetime import date, datetime
 import data_access
+from model import Guest, Room
 
 
 class BookingManager:
-    def __init__(self):
+    def __init__(self) -> None:
         self.__booking_da = data_access.BookingDataAccess()
 
-    def create_booking(self, guest: model.Guest, room: model.Room, check_in: str, check_out: str) -> model.Booking:
-        return self.__booking_da.create_new_booking(guest, room, check_in, check_out)
+    def create_booking(self, check_in_date: date,check_out_date:date, is_cancelled:bool, total_amount:float, guest: Guest = None, room: Room = None) -> model.Booking:
+        return self.__booking_da.create_new_booking(check_in_date, check_out_date, is_cancelled, total_amount, guest, room)
 
     def read_booking(self, booking_id: int) -> model.Booking:
         return self.__booking_da.read_booking_by_id(booking_id)

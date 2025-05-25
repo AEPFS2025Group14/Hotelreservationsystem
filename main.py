@@ -134,3 +134,4 @@ def create_review_table():
     """)
     conn.commit()
     conn.close()
+

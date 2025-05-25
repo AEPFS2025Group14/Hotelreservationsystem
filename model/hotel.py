@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 
 
 class Hotel:
-    def __init__(self, hotel_id: int, name:str, stars:int, address:Address =None):
+    def __init__(self, hotel_id: int, name:str, stars:int, address:Address =None, max_guests=None):
         if not hotel_id:
             raise ValueError("hotel_id is required")
         if not isinstance(hotel_id, int):
@@ -27,6 +27,7 @@ class Hotel:
         self.__stars: int = stars
         self.__address: Address = address
         self.__rooms: list[Room] = []
+        self.__max_guests: int = max_guests
 
     def __repr__(self):
         return f"Hotel(id={self.__hotel_id!r}, name={self.__name!r})"

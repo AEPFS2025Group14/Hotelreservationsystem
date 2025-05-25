@@ -9,7 +9,7 @@ class Room:
     def __init__(self, room_id:int, room_number: int, room_type:str, hotel: Hotel = None):
         if not room_id:
             raise ValueError("Room ID is required")
-        if not int(room_number, int):
+        if not isinstance(room_number, int):
             raise ValueError("Room ID must be an integer")
         if not room_number:
             raise ValueError("Room number is required")
@@ -25,7 +25,7 @@ class Room:
 
 
         self.__room_id : int = room_id
-        self.__hotel : list[Hotel] = []
+        self.__hotel:Hotel = hotel
         self.__room_number : int = room_number
         self.__room_type : str = room_type
         self.__facility : list[Facility] = []
@@ -88,19 +88,15 @@ class Room:
             self.__facility.remove(facility)
             facility.room = None
 
-
-
-    def get_total_price(self, nights: int) -> float:
-        return self.__room_type.get_price_per_night() * nights
+    #def get_total_price(self, nights: int) -> float:
+     #   return self.nights
 
     @property
-    def hotel(self) -> list[Hotel]:
-        return self.__hotel.copy()
+    def hotel(self) -> Hotel:
+        return self.__hotel
 
     @hotel.setter
     def hotel(self, hotel: Hotel) -> None:
-        from model import Hotel
-
         if hotel is not None and not isinstance(hotel, Hotel):
             raise ValueError("Hotel must be an instance of Hotel")
 
@@ -109,7 +105,7 @@ class Room:
                 self.__hotel.remove_room(self)
             self.__hotel = hotel
 
-            if hotel is not None and self not in hotel.room:
+            if hotel is not None and self not in hotel.rooms:
                 hotel.add_room(self)
 
 

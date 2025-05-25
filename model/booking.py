@@ -1,10 +1,15 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
 from datetime import date, datetime
-from .guest import Guest
-from .room import Room
+
+if TYPE_CHECKING:
+    from .guest import Guest
+    from .room import Room
+
 
 
 class Booking:
-    def __init__(self, booking_id:int, check_in_date: date,check_out_date:date, is_cancelled:bool, total_amount:float, guest: Guest = None, room : Room = None):
+    def __init__(self, booking_id:int, check_in_date: date,check_out_date:date, is_cancelled:bool, total_amount:float, guest: Guest = None, room: Room = None):
         if not booking_id:
             raise ValueError("booking_id is required")
         if not isinstance(booking_id, int):
@@ -35,7 +40,7 @@ class Booking:
             guest.add_booking(self)
         if room is not None:
             room.add_booking(self)
-        self.__room : list[Room] = []
+        self.__room : list[room] = []
 
 
     def __repr__(self):
