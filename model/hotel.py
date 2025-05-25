@@ -4,11 +4,12 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .room import Room
     from .address import Address
+    from .room_type import RoomType
 
 
 
 class Hotel:
-    def __init__(self, hotel_id: int, name:str, stars:int, address:Address =None, max_guests=None):
+    def __init__(self, hotel_id: int, name:str, stars:int, address:Address =None):
         if not hotel_id:
             raise ValueError("hotel_id is required")
         if not isinstance(hotel_id, int):
@@ -27,7 +28,7 @@ class Hotel:
         self.__stars: int = stars
         self.__address: Address = address
         self.__rooms: list[Room] = []
-        self.__max_guests: int = max_guests
+        self.__room_type: list[RoomType] = []
 
     def __repr__(self):
         return f"Hotel(id={self.__hotel_id!r}, name={self.__name!r})"
@@ -89,6 +90,25 @@ class Hotel:
         if room in self.__rooms:
             self.__rooms.remove(room)
             room.hotel = None
+
+    def add_room_type(self, room_type: RoomType) -> None:
+        if not room_type:
+            raise ValueError("room_type is required")
+        if not isinstance(room_type, RoomType):
+            raise ValueError("room_type must be an instance of RoomType")
+        if room_type not in self.__room_type:
+            self.__room_type.append(room_type)
+            room_type.hotel = self
+
+    def remove_room_type(self, room_type: RoomType) -> None:
+        from model.room_type import RoomType
+        if not room_type:
+            raise ValueError("room_type is required")
+        if not isinstance(room_type, RoomType):
+            raise ValueError("room_type must be an instance of RoomType")
+        if room_type in self.__room_type:
+            self.__room_type.remove(room_type)
+            room_type.hotel = None
 
 
 

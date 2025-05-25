@@ -1,4 +1,5 @@
 import model
+from model import RoomType
 from .base_data_access import BaseDataAccess
 from model.hotel import Hotel
 from model.address import Address
@@ -10,6 +11,7 @@ class HotelDataAccess(BaseDataAccess):
 
 
     def search_hotels_by_city(self, city: str) -> list[model.hotel]:
+
             query = """
                 SELECT h.hotel_id, h.name, h.stars, a.address_id, a.city, a.street, a.zip_code
                 FROM Hotel h
@@ -27,6 +29,7 @@ class HotelDataAccess(BaseDataAccess):
             return hotels
 
     def search_hotels_by_city_and_stars(self, city: str, stars: int) -> list[model.hotel]:
+
             query = """ 
                 SELECT h.hotel_id, h.name, h.stars, a.address_id, a.city, a.street, a.zip_code
                 FROM Hotel h
@@ -43,10 +46,12 @@ class HotelDataAccess(BaseDataAccess):
                 hotels.append(hotel)
             return hotels
 
-    def search_hotels_for_guests(self, city: str, stars: int, max_guests: int) -> list[model.hotel]:
+    def search_hotels_for_guests(self, city: str, stars: int, max_guests: int, room_typ_id=None, price_per_night= None, description = None) -> list[model.hotel]:
+
             query = """
                 SELECT
-                    h.hotel_id, h.name, h.stars, a.address_id, a.city, a.street, a.zip_code, rt.max_guests
+                    h.hotel_id, h.name, h.stars, a.address_id, a.city, a.street, a.zip_code, 
+                    rt.max_guests, rt.description, r.price_per_night, rt.type_id
                 FROM 
                     Hotel h
                 JOIN 
@@ -62,9 +67,12 @@ class HotelDataAccess(BaseDataAccess):
             hotels = []
 
             for row in results:
-                hotel_id, name, stars, address_id, city, street, zip_code, max_guests = row
+                hotel_id, name, stars, address_id, city, street, zip_code, max_guests, description, price_per_night, room_typ_id = row
+
                 address = Address(address_id, street, city, zip_code)
+                room_type = RoomType(room_typ_id, description, max_guests, price_per_night)
                 hotel = Hotel(hotel_id, name, stars, address)
+                hotel.room_type = room_type
                 hotels.append(hotel)
             return hotels
 
