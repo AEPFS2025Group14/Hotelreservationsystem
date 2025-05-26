@@ -1,6 +1,6 @@
 class RoomType:
 
-    def __init__(self, room_typ_id:int, description:str, max_guests:int, price_per_night:float):
+    def __init__(self, room_typ_id:int, description:str, max_guests:int):
         if not room_typ_id:
             raise ValueError("Roomtype id is required")
         if not isinstance(room_typ_id, int):
@@ -13,16 +13,11 @@ class RoomType:
             raise ValueError("Roomtype max_guests is required")
         if not isinstance(max_guests, int):
             raise ValueError("Roomtype max_guests must be an integer")
-        if not price_per_night:
-            raise ValueError("Roomtype price_per_night is required")
-        if not isinstance(price_per_night, float):
-            raise ValueError("Roomtype price_per_night must be a float")
 
 
         self.__room_typ : int = room_typ_id
         self.__description: str = description
         self.__max_guests : int = max_guests
-        self.__price_per_night : float = price_per_night
 
     def __repr__(self):
         return (f"Roomtype=(id={self.__room_typ_id!r}, description={self.__description!r}, "
@@ -56,16 +51,4 @@ class RoomType:
         if not isinstance(max_guests, int):
             raise ValueError("Roomtype max_guests must be an integer")
         self.__max_guests = max_guests
-
-    @property
-    def price_per_night(self):
-        return self.__price_per_night
-
-
-    @price_per_night.setter
-    def price_per_night(self, price_per_night: float) -> None:
-        if not price_per_night:
-            raise ValueError("Roomtype price_per_night is required")
-        if not isinstance(price_per_night, float):
-            raise ValueError("Roomtype price_per_night must be a float")
-        return self.__price_per_night
+        

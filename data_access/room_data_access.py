@@ -1,10 +1,12 @@
 import model
 from data_access.base_data_access import BaseDataAccess
+from data_access.room_type_data_access import RoomTypeDataAccess
 
 
 class RoomDataAccess(BaseDataAccess):
     def __init__(self, db_path: str = None):
         super().__init__(db_path)
+        self.__room_type_da = RoomTypeDataAccess()
 
     def create_new_room(self,
                         room_number: str,
@@ -40,8 +42,15 @@ class RoomDataAccess(BaseDataAccess):
 
     def read_rooms_by_hotel(self, hotel: model.Hotel) -> list[model.Room]:
         sql = """
-        SELECT room_id, room_number, hotel_id, type_id, price_per_night
+        SELECT room_id, room_number, type_id, price_per_night
         FROM Room WHERE hotel_id = ?
         """
         rows = self.fetchall(sql, (hotel.hotel_id,))
-        return [model.Room(*row) for row in rows]
+        rooms = []
+        for row in rows:
+            room_id, room_number, type_id, price_per_night = row
+            print(type(room_id))
+            room_type = self.__room_type_da.read_room_type_by(type_id)
+            room = model.Room(room_id, room_number, room_type)
+            rooms.append(room)
+        return rooms

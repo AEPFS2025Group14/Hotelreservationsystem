@@ -3,22 +3,25 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .hotel import Hotel
+    from .room_type import RoomType
     from .facilities import Facility
 
 class Room:
-    def __init__(self, room_id:int, room_number: int, room_type:str, hotel: Hotel = None):
+    # TODO: price_per_night
+    def __init__(self, room_id:int, room_number: str, room_type:RoomType, hotel: Hotel = None):
+        from .room_type import RoomType
         if not room_id:
             raise ValueError("Room ID is required")
-        if not isinstance(room_number, int):
+        if not isinstance(room_id, int):
             raise ValueError("Room ID must be an integer")
         if not room_number:
             raise ValueError("Room number is required")
-        if not isinstance(room_number, int):
+        if not isinstance(room_number, str):
             raise ValueError("Room number must be an integer")
         if not room_type:
             raise ValueError("Room type is required")
-        if not isinstance(room_type, str):
-            raise ValueError("Room type must be an string")
+        if not isinstance(room_type, RoomType):
+            raise ValueError("Room type must be a RoomType")
         if hotel is not None and not isinstance(hotel, Hotel):
             raise ValueError("Hotel must be an instance of Hotel")
 
@@ -27,7 +30,7 @@ class Room:
         self.__room_id : int = room_id
         self.__hotel:Hotel = hotel
         self.__room_number : int = room_number
-        self.__room_type : str = room_type
+        self.__room_type : RoomType = room_type
         self.__facility : list[Facility] = []
 
 
@@ -47,21 +50,21 @@ class Room:
 
     @room_number.setter
     def room_number(self, room_number: int) -> None:
-        if not int(room_number, int):
+        if not isinstance(room_number, int):
             raise ValueError("Room ID must be an integer")
         if not room_number:
             raise ValueError("Room number is required")
         self.__room_number = room_number
 
     @property
-    def room_type(self) -> str:
+    def room_type(self) -> RoomType:
         return self.__room_type
     @room_type.setter
-    def room_type(self, room_type: str) -> None:
+    def room_type(self, room_type: RoomType) -> None:
         if not room_type:
             raise ValueError("Room type is required")
-        if not isinstance(room_type, str):
-            raise ValueError("Room type must be an string")
+        if not isinstance(room_type, RoomType):
+            raise ValueError("Room type must be a RoomType")
         self.__room_type = room_type
 
     @property
@@ -97,6 +100,7 @@ class Room:
 
     @hotel.setter
     def hotel(self, hotel: Hotel) -> None:
+        from .hotel import Hotel
         if hotel is not None and not isinstance(hotel, Hotel):
             raise ValueError("Hotel must be an instance of Hotel")
 

@@ -1,6 +1,7 @@
 import model
 from model import RoomType
 from .base_data_access import BaseDataAccess
+from .room_data_access import RoomDataAccess
 from model.hotel import Hotel
 from model.address import Address
 
@@ -8,6 +9,7 @@ from model.address import Address
 class HotelDataAccess(BaseDataAccess):
     def __init__(self, db_path: str = None):
         super().__init__(db_path)
+        self.__room_da = RoomDataAccess()
 
 
     def search_hotels_by_city(self, city: str) -> list[model.hotel]:
@@ -78,7 +80,23 @@ class HotelDataAccess(BaseDataAccess):
 
 
     def read_hotels_by_city(self, city):
-        pass
+        sql = """
+        SELECT hotel_id, name, stars, Address.address_id, street, city, zip_code FROM Hotel
+        JOIN Address ON Address.address_id = Hotel.address_id
+        WHERE Address.city = ?
+        """
+        params = tuple([city])
+        result = self.fetchall(sql, params)
+        hotels = []
+        for row in result:
+            hotel_id, name, stars, address_id, street, city, zip_code = row
+            address = model.Address(address_id, street, city, zip_code)
+            hotel = model.Hotel(hotel_id, name, stars, address)
+            rooms = self.__room_da.read_rooms_by_hotel(hotel)
+            for room in rooms:
+                hotel.add_room(room)
+            hotels.append(hotel)
+        return hotels
 
     def update_hotel(self, hotel):
         pass
