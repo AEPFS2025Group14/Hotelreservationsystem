@@ -1,0 +1,4 @@
+
+class UserInputError(Exception):
+    pass
+

@@ -1,3 +1,6 @@
+##Hotel listen geben lassen von Hotelaccess und auch Sterne etc
+
+
 def validate_search_inputs_1_1(city: str):
     allowed_cities = ["Luzern", "Basel", "Zürich", "Genève", "Bern"]
 

@@ -109,4 +109,4 @@ class HotelDataAccess(BaseDataAccess):
 
     def create_new_hotel(self, name, stars, address):
         pass
-    
+
