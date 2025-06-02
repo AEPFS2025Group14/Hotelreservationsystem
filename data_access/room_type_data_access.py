@@ -15,3 +15,4 @@ class RoomTypeDataAccess(BaseDataAccess):
         result = self.fetchone(sql, params)
         type_id, description, max_guests = result
         return model.RoomType(type_id, description, max_guests)
+

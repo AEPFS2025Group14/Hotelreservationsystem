@@ -25,3 +25,4 @@ class RoomManager:
     def read_rooms_by_hotel(self, hotel: model.Hotel) -> list[model.Room]:
         return self.__room_da.read_rooms_by_hotel(hotel)
 
+

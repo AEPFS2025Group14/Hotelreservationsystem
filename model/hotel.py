@@ -10,7 +10,6 @@ if TYPE_CHECKING:
 
 class Hotel:
     def __init__(self, hotel_id: int, name:str, stars:int, address:Address =None):
-        from .room import Room
         if not hotel_id:
             raise ValueError("hotel_id is required")
         if not isinstance(hotel_id, int):

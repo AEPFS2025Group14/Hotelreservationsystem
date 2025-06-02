@@ -38,6 +38,26 @@ class HotelManager:
     def search_hotels_for_guests(self, city: str, stars: int, max_guests :int ) -> list[model.Hotel]:
         return self.__hotel_da.search_hotels_for_guests(city, stars, max_guests)
 
+    def search_hotel_Aufenthalt(self, city: str, check_in_date: str, check_out_date: str) -> list[model.hotel]:
+        return self.__hotel_da.search_hotel_Aufenthalt(city, check_in_date, check_out_date)
+
+    def search_hotel_combinated(self, city: str, check_in_date: str, check_out_date: str,
+                                min_stars: int = 0, max_guests: int = None) -> list[model.hotel]:
+        return self.__hotel_da.search_hotel_combinated(city, check_in_date, check_out_date, min_stars, max_guests)
+
+    def zeige_Information_pro_Hotel(self) -> list[model.hotel]:
+        return self.__hotel_da.zeige_Information_pro_Hotel()
+
+    def search_hotel_print_rooms(self, city: str, description=None, max_guests=None, room_typ_id=None,
+                                 address_id=None, zip_code=None, street=None) -> list[model.hotel]:
+        return self.search_hotel_print_rooms(city, description, max_guests, room_typ_id)
+
+    def show_Information_per_room(self, nights: int) -> list[dict]:
+        return self.__hotel_da.show_Information_per_room(nights)
+
+    def zeige_verfuegbare_zimmer(self, check_in_date: str, check_out_date: str) -> list[dict]:
+        return self.__hotel_da.zeige_verfuegbare_zimmer(check_in_date, check_out_date)
+
     def all_room_types(self, hotel: Hotel) -> list[model.RoomType]:
         room_type_ids_of_hotel: list[int] = []
         for room in hotel.rooms:

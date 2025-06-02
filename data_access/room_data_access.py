@@ -1,6 +1,7 @@
 import model
 from data_access.base_data_access import BaseDataAccess
 from data_access.room_type_data_access import RoomTypeDataAccess
+from model import RoomType
 
 
 class RoomDataAccess(BaseDataAccess):
@@ -28,6 +29,10 @@ class RoomDataAccess(BaseDataAccess):
                           hotel=hotel,
                           room_type=room_type,
                           price_per_night=price_per_night)
+
+
+
+
 
     def read_room_by_id(self, room_id: int) -> model.Room | None:
         sql = """
