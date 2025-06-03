@@ -26,7 +26,7 @@ def validate_search_inputs_1_3(city: str, stars: int, max_guests: int):
     if city not in allowed_cities:
         raise ValueError(f"Wir haben leider kein Hotel in der Stadt '{city}'.")
 
-    if stars != 5:
+    if 1 > stars > 5:
         raise ValueError("Wir haben leider kein passendes Hotel mit anderen Sternen als 5.")
 
     if max_guests < 1:

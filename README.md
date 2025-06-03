@@ -60,4 +60,4 @@ The notebook `Hotelreservation.ipynb` includes:
  ```bash
 python main.py
 
-
+#Grundsätzliche Überlegungen, Composition, Aggreg... usw. veranschaulichen mit UML usw. wenn man einzelne Userstry will ausführen findet ihr dies im UI, wie installiert man enviroment mit python etc chat gpt fragen betr installationsanleitung
