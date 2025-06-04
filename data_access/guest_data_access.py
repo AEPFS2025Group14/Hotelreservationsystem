@@ -7,16 +7,23 @@ class GuestDataAccess(BaseDataAccess):
     def __init__(self, db_path: str = None):
         super().__init__(db_path)
 
-    def create_new_guest(self, first_name: str, last_name: str, email: str, phone: str) -> model.Guest:
-        sql = "INSERT INTO Guest (first_name, last_name, email, phone) VALUES (?, ?, ?, ?)"
-        last_row_id, _ = self.execute(sql, (first_name, last_name, email, phone))
-        return model.Guest(last_row_id, first_name, last_name, email, phone)
+    def create_new_guest(self, first_name: str, last_name: str, email: str) -> model.Guest:
+        sql = """INSERT INTO Guest (first_name, last_name, email) VALUES (?, ?, ?, ?)"""
+        last_row_id, _ = self.execute(sql, (first_name, last_name, email))
+        return model.Guest(last_row_id, first_name, last_name, email)
 
-    def read_guest_by_id(self, guest_id: int) -> model.Guest | None:
-        sql = "SELECT guest_id, first_name, last_name, email, phone FROM Guest WHERE guest_id = ?"
-        result = self.fetchone(sql, (guest_id,))
+    def read_guest_by_id(self, guest_id: int, address_da) -> model.Guest | None:
+        sql = """
+        SELECT guest_id, first_name, last_name, email, address_id FROM Guest WHERE guest_id = ?"""
+        params = (guest_id,)
+        result = self.fetchone(sql, params)
+
         if result:
-            return model.Guest(*result)
+            guest_id, first_name, last_name, email, address_id = result
+            if email is None:
+                email = ""  # Standardwert oder leerer String
+            address = address_da.read_address_by_id(address_id) if address_id else None
+            return model.Guest(guest_id, first_name, last_name, email, address)
         return None
 
     def read_all_guests(self) -> list[model.Guest]:
@@ -39,9 +46,9 @@ class GuestDataAccess(BaseDataAccess):
 
     def update_guest(self, guest: model.Guest) -> None:
         sql = """
-        UPDATE Guest SET first_name = ?, last_name = ?, email = ?, phone = ? WHERE guest_id = ?
+        UPDATE Guest SET first_name = ?, last_name = ?, email = ? WHERE guest_id = ?
         """
-        self.execute(sql, (guest.first_name, guest.last_name, guest.email, guest.phone, guest.guest_id))
+        self.execute(sql, (guest.first_name, guest.last_name, guest.email, guest.guest_id))
 
     def delete_guest(self, guest: model.Guest) -> None:
         self.execute("DELETE FROM Guest WHERE guest_id = ?", (guest.guest_id,))

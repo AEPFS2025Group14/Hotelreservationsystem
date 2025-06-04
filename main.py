@@ -1,5 +1,6 @@
 import sqlite3
 
+
 DB_PATH = "database/hotel_reservation_sample.db"  # anpassen falls dein Pfad anders ist
 
 def create_review_table():
@@ -134,4 +135,3 @@ def create_review_table():
     """)
     conn.commit()
     conn.close()
-

@@ -1,5 +1,8 @@
+
+
 import model
-from model import RoomType, Room, address
+from model.room_type import RoomType
+from model.room import Room
 from .base_data_access import BaseDataAccess
 from .room_data_access import RoomDataAccess
 from model.hotel import Hotel
@@ -11,7 +14,7 @@ class HotelDataAccess(BaseDataAccess):
             super().__init__(db_path)
             self.__room_da = RoomDataAccess()
 
-        def search_hotels_by_city(self, city: str) -> list[model.hotel]:
+        def search_hotels_by_city(self, city: str) -> list[model.Hotel]:
 
             query = """
                     SELECT h.hotel_id, h.name, h.stars, a.address_id, a.city, a.street, a.zip_code
@@ -28,13 +31,13 @@ class HotelDataAccess(BaseDataAccess):
                 hotels.append(hotel)
             return hotels
 
-        def search_hotels_by_city_and_stars(self, city: str, stars: int) -> list[model.hotel]:
+        def search_hotels_by_city_and_stars(self, city: str, stars: int) -> list[model.Hotel]:
 
                 query = """ 
                     SELECT h.hotel_id, h.name, h.stars, a.address_id, a.city, a.street, a.zip_code
                     FROM Hotel h
                     JOIN Address a ON h.address_id = a.address_id
-                    WHERE a.city = ? AND h.stars = ?;
+                    WHERE a.city = ? AND h.stars = ?
                     """
 
                 results = self.fetchall(query, (city, stars))
@@ -46,7 +49,7 @@ class HotelDataAccess(BaseDataAccess):
                     hotels.append(hotel)
                 return hotels
 
-        def search_hotels_for_guests(self, city: str, stars: int, max_guests: int, room_typ_id=None, description = None) -> list[model.hotel]:
+        def search_hotels_for_guests(self, city: str, stars: int, max_guests: int, room_typ_id=None, description = None) -> list[model.Hotel]:
 
                 query = """
                     SELECT
@@ -61,22 +64,27 @@ class HotelDataAccess(BaseDataAccess):
                     JOIN 
                         Room_Type rt ON r.type_id = rt.type_id
                     WHERE 
-                        a.city = ? AND h.stars = ? AND rt.max_guests >= ?;
+                        a.city = ? AND h.stars = ? AND rt.max_guests >= ?
                 """
                 results = self.fetchall(query, (city, stars, max_guests))
-                hotels = []
+                hotels_by_id = {}
 
                 for row in results:
-                    description, max_guests, room_type_id, name, stars, hotel_id, address_id, city, street, zip_code = row
-
-                    room_type = RoomType(room_type_id, description, max_guests)
+                    hotel_id, name, stars, address_id, city, street, zip_code, max_guests_val, desc, room_type_id = row
+                    room_type = RoomType(room_type_id, desc, max_guests_val)
                     address = Address(address_id, street, city, zip_code)
-                    hotel = Hotel(hotel_id, name, stars, address)
-                    hotel.room_type = room_type
-                    hotels.append(hotel)
-                return hotels
 
-        def search_hotel_Aufenthalt(self, city: str, check_in_date: str, check_out_date :str) -> list[model.hotel]:
+                    if hotel_id not in hotels_by_id:
+                        hotel = Hotel(hotel_id, name, stars, address)
+                        hotels_by_id[hotel_id] = hotel
+                    else:
+                        hotel = hotels_by_id[hotel_id]
+
+                    hotel.add_room_type(room_type)
+
+                return list(hotels_by_id.values())
+
+        def search_hotel_Aufenthalt(self, city: str, check_in_date: str, check_out_date :str) -> list[model.Hotel]:
                 sql = """
                     SELECT Room.room_id, Room.room_number, Room_Type.description, Room_Type.max_guests, Room_Type.type_id,
                            Hotel.name, Hotel.stars, Room.price_per_night, Hotel.hotel_id,
@@ -117,7 +125,7 @@ class HotelDataAccess(BaseDataAccess):
                 return hotels
 
         def search_hotel_combinated(self, city: str, check_in_date: str, check_out_date: str,
-                                  min_stars: int = 0, max_guests: int = None) -> list[model.hotel]:
+                                  min_stars: int = 0, max_guests: int = None) -> list[model.Hotel]:
                 sql = """
                     SELECT Room.room_id, Room.room_number, Room_Type.description, Room_Type.max_guests, Room_Type.type_id,
                            Hotel.name, Hotel.stars, Room.price_per_night, Hotel.hotel_id,
@@ -136,7 +144,7 @@ class HotelDataAccess(BaseDataAccess):
                       )
                 """
 
-                params = [city, min_stars, check_out_date, check_in_date]
+                params = [city, min_stars, check_in_date, check_out_date]
 
                 if max_guests is not None:
                     sql += " AND Room_Type.max_guests >= ?"
@@ -146,33 +154,32 @@ class HotelDataAccess(BaseDataAccess):
                 hotel_map = {}
 
                 for row in results:
-                    for row in results:
-                        (
+                    (
                             room_id, room_number, description, max_guests_row, room_type_id,
                             name, stars, price_per_night, hotel_id,
                             address_id, street, city_name, zip_code
                         ) = row
 
-                        if max_guests_row < max_guests:
-                            continue  # Zimmer bietet nicht genug Platz
+                    if max_guests_row < max_guests:
+                        continue  # Zimmer bietet nicht genug Platz
 
-                        room_type = RoomType(room_type_id, description, max_guests_row)
-                        room = Room(room_id, room_number, room_type, price_per_night)
-                        address = Address(address_id, street, city_name, zip_code)
+                    room_type = RoomType(room_type_id, description, max_guests_row)
+                    room = Room(room_id, room_number, room_type, price_per_night)
+                    address = Address(address_id, street, city_name, zip_code)
 
-                        if hotel_id not in hotel_map:
-                            hotel = Hotel(hotel_id, name, stars, address)
-                            hotel.add_room(room)
-                            hotel_map[hotel_id] = hotel
-                        else:
-                            existing_hotel = hotel_map[hotel_id]
-                            existing_room = existing_hotel.rooms[0]
-                            if room.price_per_night < existing_room.price_per_night:
-                                existing_hotel.rooms = [room]  # Günstigeres Zimmer ersetzen
+                    if hotel_id not in hotel_map:
+                        hotel = Hotel(hotel_id, name, stars, address)
+                        hotel.add_room(room)
+                        hotel_map[hotel_id] = hotel
+                    else:
+                        existing_hotel = hotel_map[hotel_id]
+                        existing_room = existing_hotel.rooms[0]
+                        if room.price_per_night < existing_room.price_per_night:
+                            existing_hotel.rooms = [room]  # Günstigeres Zimmer ersetzen
 
-                    return list(hotel_map.values())
+                return list(hotel_map.values())
 
-        def zeige_Information_pro_Hotel(self) -> list[model.hotel]:
+        def zeige_Information_pro_Hotel(self) -> list[model.Hotel]:
 
                 query = """
                     SELECT Hotel.hotel_id, Hotel.name, Hotel.stars, Address.address_id, Address.street, Address.city, Address.zip_code
@@ -195,7 +202,7 @@ class HotelDataAccess(BaseDataAccess):
 
 
         def search_hotel_print_rooms(self, city: str, description=None, max_guests=None, room_type_id=None,
-                                     address_id=None, zip_code=None, street=None, room_number=None) -> list[model.hotel]:
+                                     address_id=None, zip_code=None, street=None, room_number=None) -> list[model.Hotel]:
                 query = """
                     SELECT Room.room_id, Room.room_number, Room_Type.description, Room_Type.max_guests, Room_Type.type_id,
                             Hotel.name, Hotel.stars, Room.price_per_night, Hotel.hotel_id, Address.address_id, Address.street, Address.city, Address.zip_code 
@@ -319,17 +326,69 @@ class HotelDataAccess(BaseDataAccess):
                 hotels.append(hotel)
             return hotels
 
-        def update_hotel(self, hotel):
-            pass
+        def update_hotel(self, hotel_id: int, name: str, stars: int, address_id: int) -> bool:
+            if not hotel_id:
+                raise ValueError("Hotel-ID ist erforderlich")
+            if not name:
+                raise ValueError("Hotelname darf nicht leer sein")
+            if stars < 1 or stars > 5:
+                raise ValueError("Sterne müssen zwischen 1 und 5 liegen")
+            if not address_id:
+                raise ValueError("Address-ID ist erforderlich")
 
-        def delete_hotel(self, hotel):
-            pass
+            sql = """
+                UPDATE Hotel
+                SET name = ?, stars = ?, address_id = ?
+                WHERE hotel_id = ?;
+                """
+            params = (name, stars, address_id, hotel_id)
+            _, row_count = self.execute(sql, params)
+
+            return row_count > 0
+
+
+
+
+
+        def delete_hotel(self, hotel_id) -> bool:
+            if not hotel_id:
+                raise ValueError("Hotel ID is required")
+
+            sql = """
+            DELETE FROM Hotel
+            WHERE hotel_id = ?;
+            """
+            params = (hotel_id, )
+            _, row_count = self.execute(sql, params)
+            return row_count > 0
+
 
         def read_hotel_by_id(self, hotel_id):
             pass
 
-        def create_new_hotel(self, name, stars, address):
-            pass
+        def create_new_hotel(self, name: str, stars:int, address: model.Address) -> list[model.Hotel]:
+            if name is None:
+                raise ValueError("Hotel name is required")
+            if stars is None:
+                raise ValueError("Hotel stars is required")
+            if address is None:
+                raise ValueError("Hotel address is required")
+
+            sql = """
+            INSERT INTO Hotel (name, stars, address_id)
+            VALUES (?, ?, ?)
+            """
+            address_id = address.address_id
+            params = (name, stars, address.address_id)
+            last_row_id, row_count = self.execute(sql, params)
+            return model.Hotel (
+                hotel_id=last_row_id,
+                name =name,
+                stars = stars,
+                address = address)
+
+
+
 
 
 

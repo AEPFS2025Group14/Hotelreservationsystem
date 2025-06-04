@@ -1,10 +1,13 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
+import model
+
 if TYPE_CHECKING:
     from .hotel import Hotel
     from .room_type import RoomType
     from .facilities import Facility
+    from model.booking import Booking
 
 
 
@@ -34,8 +37,7 @@ class Room:
         self.__facility : list[Facility] = []
         self.__price_per_night : float = price_per_night
         self.__hotel : Hotel = hotel
-
-
+        self.__bookings: list[Booking] = []
 
     def __repr__(self):
         return (f"Room(id={self.__room_id!r}, room_id={self.__room_id!r}, room_number={self.__room_number!r})"
@@ -127,6 +129,20 @@ class Room:
         self.__price_per_night = price_per_night
 
 
+    @property
+    def bookings(self) -> list[model.Booking]:
+        return self.__booking
 
+    def add_booking(self, booking: model.Booking) -> None:
+        if booking is None:
+            raise ValueError("Booking is required")
+        if not isinstance(booking, model.Booking):
+            raise ValueError("Booking must be an instance of Booking")
 
+        # Liste initialisieren, falls nicht vorhanden (failsafe)
+        if not hasattr(self, '_booking') or self._booking is None:
+            self._booking = []
 
+        # Nur hinzufügen, wenn noch nicht enthalten
+        if booking not in self._booking:
+            self._booking.append(booking)

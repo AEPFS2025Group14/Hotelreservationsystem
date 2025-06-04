@@ -19,8 +19,8 @@ class RoomManager:
             price_per_night=price_per_night
         )
 
-    def read_room(self, room_id: int) -> model.Room:
-        return self.__room_da.read_room_by_id(room_id)
+    def get_room_by_id(self, room_id: int) -> [model.Room]:
+        return self.__room_da.get_room_by_id(room_id)
 
     def read_rooms_by_hotel(self, hotel: model.Hotel) -> list[model.Room]:
         return self.__room_da.read_rooms_by_hotel(hotel)

@@ -2,9 +2,12 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 from datetime import date, datetime
 
+import model
+
 if TYPE_CHECKING:
     from .guest import Guest
     from .room import Room
+    from model.guest import Guest
 
 
 
@@ -22,7 +25,7 @@ class Booking:
             raise ValueError("check_out_date is required")
         if not isinstance(check_out_date, date):
             raise ValueError("check_out_date must be an date")
-        if not is_cancelled:
+        if is_cancelled is None:
             raise ValueError("is_cancelled is required")
         if not isinstance(is_cancelled, bool):
             raise ValueError("is_cancelled must be an boolean")
@@ -36,17 +39,24 @@ class Booking:
         self.__check_out_date : date = check_out_date
         self.__is_cancelled : bool = is_cancelled
         self.__total_amount : float = total_amount
+        self.__guest = guest
+        self.__room: Room = room
+
+
         if guest is not None:
             guest.add_booking(self)
         if room is not None:
             room.add_booking(self)
-        self.__room : list[room] = []
+
+
 
 
     def __repr__(self):
         return (f"Booking={self.__booking_id!r}, check_in_date={self.__check_in_date!r}, "
-                f"check_out_date={self.__check_out_date!r}, is_cancellled={self.__is_cancelled!r})",
-                f"total_amount={self.__total_amount!r}, guest={self.__guest!r}, room={self.__room!r}")
+        f"check_out_date={self.__check_out_date!r}, is_cancelled={self.__is_cancelled!r}, "
+        f"total_amount={self.__total_amount!r}, guest={self.__guest!r}, room={self.__room!r}")
+
+
 
 
     @property
@@ -103,34 +113,31 @@ class Booking:
 
 
     @property
-    def guest(self) -> Guest:
+    def guest(self) -> model.Guest | None:
         return self.__guest
 
+    def guest(self, guest: Guest | None) -> None:
+        if guest is not None and not isinstance(guest, Guest):
+            raise ValueError("guest must be a Guest or None")
 
-    @guest.setter
-    def guest(self, guest) -> None:
-        if guest is None and not isinstance(guest, Guest):
-            raise ValueError("guest must be a Guest")
-        if self.__guest is not guest:
+        if self.__guest is not None and self.__guest is not guest:
             self.__guest.remove_booking(self)
+
         self.__guest = guest
+
         if guest is not None and self not in guest.bookings:
             guest.add_booking(self)
 
 
     @property
-    def room(self) -> list [Room]:
+    def room(self) -> Room:
         return self.__room
 
     def add_room(self, room: Room) -> None:
-        from model import Room
-        if not room:
-            raise ValueError("room is required")
         if not isinstance(room, Room):
             raise ValueError("room must be a Room")
-        if room not in self.__room:
-            self.__room.append(room)
-            room.booking = self
+        self.__room = room
+        room.add_booking(self)
 
     def remove_room(self, room: Room) -> None:
         from model import Room

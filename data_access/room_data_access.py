@@ -30,19 +30,21 @@ class RoomDataAccess(BaseDataAccess):
                           room_type=room_type,
                           price_per_night=price_per_night)
 
-
-
-
-
-    def read_room_by_id(self, room_id: int) -> model.Room | None:
+    def get_room_by_id(self, room_id: int) -> [model.Room]:
         sql = """
-        SELECT room_id, room_number, hotel_id, type_id, price_per_night
-        FROM Room WHERE room_id = ?
+        SELECT r.room_id, r.room_number, r.price_per_night,
+               rt.type_id, rt.description, rt.max_guests
+        FROM Room r
+        JOIN Room_Type rt ON r.type_id = rt.type_id
+        WHERE r.room_id = ?
         """
-        result = self.fetchone(sql, (room_id,))
+        params = (room_id,)
+        result = self.fetchone(sql, params)
+
         if result:
-            room_id, room_number, hotel_id, type_id, price_per_night = result
-            return model.Room(room_id, room_number, hotel_id, type_id, price_per_night)
+            room_id, room_number, price_per_night, type_id, description, max_guests = result
+            room_type = model.RoomType(type_id, description, max_guests)
+            return model.Room(room_id, room_number, room_type, price_per_night)
         return None
 
     def read_rooms_by_hotel(self, hotel: model.Hotel) -> list[model.Room]:

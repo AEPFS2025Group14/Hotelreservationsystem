@@ -1,15 +1,15 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
+from model.room_type import RoomType
+
 
 if TYPE_CHECKING:
     from .room import Room
     from .address import Address
-    from .room_type import RoomType
-
-
+    from model.room_type import RoomType
 
 class Hotel:
-    def __init__(self, hotel_id: int, name:str, stars:int, address:Address =None):
+    def __init__(self, hotel_id: int, name:str, stars:int, address:Address =None, room_type:RoomType=None):
         if not hotel_id:
             raise ValueError("hotel_id is required")
         if not isinstance(hotel_id, int):
@@ -29,6 +29,8 @@ class Hotel:
         self.__address: Address = address
         self.__rooms: list[Room] = []
         self.__room_type: list[RoomType] = []
+        if room_type:
+            self.add_room_type(room_type)
 
     def __repr__(self):
         return f"Hotel(id={self.__hotel_id!r}, name={self.__name!r})"
@@ -54,7 +56,7 @@ class Hotel:
         return self.__stars
 
     @stars.setter
-    def stars(self, stars) :
+    def stars(self, stars:int) :
         if not stars:
             raise ValueError("stars is required")
         if not isinstance(stars, int):
@@ -62,12 +64,22 @@ class Hotel:
         self.__stars = stars
 
     @property
-    def address(self):
+    def address(self) -> Address:
         return self.__address
 
-    @address.setter
-    def address(self, address):
+    def add_address(self, address:Address) -> None:
+        from .address import Address
+        if not address:
+            raise ValueError("address is required")
+        if not isinstance(address, Address):
+            raise ValueError("address must be an instance of Address")
         self.__address = address
+        address.hotel = self
+
+    def remove_address(self, address: Address) -> None:
+        if self.__address:
+            self.__address.hotel = None
+        self.__address = None
 
     @property
     def rooms(self) -> list[Room]:
@@ -92,6 +104,11 @@ class Hotel:
             self.__rooms.remove(room)
             room.hotel = None
 
+
+    @property
+    def room_type(self) -> list[RoomType]:
+        return self.__room_type
+
     def add_room_type(self, room_type: RoomType) -> None:
         if not room_type:
             raise ValueError("room_type is required")
@@ -101,7 +118,7 @@ class Hotel:
             self.__room_type.append(room_type)
             room_type.hotel = self
 
-    def remove_room_type(self, room_type: RoomType) -> None:
+    def remove_room_type(self, room_type : RoomType) -> None:
         from model.room_type import RoomType
         if not room_type:
             raise ValueError("room_type is required")
@@ -111,7 +128,3 @@ class Hotel:
             self.__room_type.remove(room_type)
             room_type.hotel = None
 
-
-
-    def get_full_address(self):
-        return f"{self.__address.street}, {self.__address.zip_code} {self.__address.city}"

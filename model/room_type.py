@@ -15,7 +15,7 @@ class RoomType:
             raise ValueError("Roomtype max_guests must be an integer")
 
 
-        self.__room_typ : int = room_typ_id
+        self.__room_typ_id : int = room_typ_id
         self.__description: str = description
         self.__max_guests : int = max_guests
 
@@ -25,8 +25,8 @@ class RoomType:
 
 
     @property
-    def room_type_id(self) ->int:
-        return self.__room_typ
+    def room_typ_id(self) ->int:
+        return self.__room_typ_id
 
     @property
     def description(self) ->str:

@@ -16,6 +16,7 @@ class AddressDataAccess(BaseDataAccess):
         sql = """ 
         INSERT INTO Address (street, city, zip_code) VALUES (?, ?, ?)
         """
+
         params = (street, city, zip_code)
         last_row_id, row_count = self.execute(sql, params)
         return model.Address(address_id=last_row_id, street=street, city=city, zip_code=zip_code)
@@ -24,7 +25,7 @@ class AddressDataAccess(BaseDataAccess):
 
     def read_address_by_id(self, address_id: int) -> model.Address | None:
         sql = """
-        SELECT AddressId, Street, Zip_Code, City FROM Address WHERE AddressId = ?
+        SELECT address_id, Street, Zip_Code, City FROM Address WHERE address_id = ?
         """
         params = (address_id,)
         result = self.fetchone(sql, params)
@@ -36,7 +37,7 @@ class AddressDataAccess(BaseDataAccess):
 
     def read_all_addresses(self) -> list[model.Address]:
         sql = """
-        SELECT AddressId, Street, Zip_Code, City FROM Address ORDER BY AddressId
+        SELECT address_id, Street, Zip_Code, City FROM Address ORDER BY address_id
         """
         rows = self.fetchall(sql)
         return [model.Address(address_id, street, zip_code, city) for address_id, street, zip_code, city in rows]
