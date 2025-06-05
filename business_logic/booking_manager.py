@@ -34,3 +34,31 @@ class BookingManager:
 
     def delete_booking(self, booking: model.Booking) -> None:
         self.__booking_da.delete_booking(booking)
+
+
+# 5. Als Gast möchte ich nach meinem Aufenthalt eine Rechnung erhalten, damit ich einen Zahlungsnachweis habe. Hint: Fügt einen Eintrag in der «Invoice» Tabelle hinzu.
+
+def get_booking_by_id(booking_id: int, cursor=None):
+    cursor.execute("""
+        SELECT booking_id, is_cancelled, total_amount FROM Booking
+        WHERE booking_id = ?
+    """, (booking_id,))
+    row = cursor.fetchone()
+    if row:
+        # Rückgabe eines simplen Objekts oder namedtuple
+        return type('Booking', (object,), {
+            'booking_id': row[0],
+            'is_cancelled': bool(row[1]),
+            'total_amount': row[2]
+        })()
+    return None
+
+#6. Als Gast möchte ich meine Buchung stornieren, damit ich nicht belastet werde, wenn ich das Zimmer nicht mehr benötige. Hint: Sorgt für die entsprechende Invoice.
+
+def cancel_booking(booking_id: int):
+    cursor.execute("""
+        UPDATE Booking
+        SET is_cancelled = 1, total_amount = 0.00
+        WHERE booking_id = ?
+    """, (booking_id,))
+    conn.commit()
