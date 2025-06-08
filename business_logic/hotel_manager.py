@@ -71,3 +71,7 @@ class HotelManager:
             room_types.append(room_type)
         return room_types
 
+    def get_dynamic_room_prices(self, check_in_date: str) -> list[dict]:
+        return self.__hotel_da.get_dynamic_room_prices(check_in_date)
+
+

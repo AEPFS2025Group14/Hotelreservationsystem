@@ -99,7 +99,43 @@ class BookingDataAccess(BaseDataAccess):
     def delete_booking(self, booking: model.Booking) -> None:
         self.execute("DELETE FROM Booking WHERE booking_id = ?", (booking.booking_id,))
 
+    def get_all_bookings(self) -> list[dict]:
 
+        query = """
+            SELECT 
+                b.booking_id,
+                b.check_in_date,
+                b.check_out_date,
+                b.is_cancelled,
+                b.total_amount,
+                r.room_number,
+                h.name AS hotel_name,
+                g.first_name || ' ' || g.last_name AS guest_name
+            FROM Booking b
+            JOIN Room r ON b.room_id = r.room_id
+            JOIN Hotel h ON r.hotel_id = h.hotel_id
+            JOIN Guest g ON b.guest_id = g.guest_id
+            ORDER BY b.check_in_date DESC
+        """
+        results = self.fetchall(query)
+        buchungen = []
 
-    def read_all_booking_as_df(self):
-        pass
+        for row in results:
+            (
+                booking_id, check_in, check_out, is_cancelled,
+                total, room_number, hotel_name, guest_name
+            ) = row
+
+            buchungen.append({
+                "Buchungs-ID": booking_id,
+                "Hotel": hotel_name,
+                "Zimmer": room_number,
+                "Gast": guest_name,
+                "Check-in": check_in,
+                "Check-out": check_out,
+                "Storniert": bool(is_cancelled),
+                "Gesamtbetrag (CHF)": total
+            })
+
+        return buchungen
+

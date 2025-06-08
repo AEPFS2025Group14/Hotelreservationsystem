@@ -38,3 +38,5 @@ class BookingManager:
     def get_booking_by_id(self, booking_id: int) -> model.Booking:
         return self.__booking_da.get_booking_by_id()
 
+    def get_all_bookings(self) -> list[dict]:
+        return self.__booking_da.get_all_bookings()

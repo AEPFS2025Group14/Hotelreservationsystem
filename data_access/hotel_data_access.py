@@ -387,6 +387,53 @@ class HotelDataAccess(BaseDataAccess):
                 stars = stars,
                 address = address)
 
+        def get_dynamic_room_prices(self, check_in_date: str) -> list[dict]:
+
+            query = """
+                SELECT
+                    r.room_id,
+                    r.room_number,
+                    rt.description,
+                    rt.max_guests,
+                    r.price_per_night,
+                    CASE
+                        WHEN DATE(?) BETWEEN DATE('2025-07-01') AND DATE('2025-08-31') THEN ROUND(r.price_per_night * 1.2, 2)
+                        WHEN DATE(?) BETWEEN DATE('2025-12-20') AND DATE('2026-01-05') THEN ROUND(r.price_per_night * 1.3, 2)
+                        ELSE r.price_per_night
+                    END AS dynamic_price,
+                    h.name AS hotel_name,
+                    a.city,
+                    a.street,
+                    a.zip_code
+                FROM Room r
+                JOIN Room_Type rt ON r.type_id = rt.type_id
+                JOIN Hotel h ON r.hotel_id = h.hotel_id
+                JOIN Address a ON h.address_id = a.address_id
+                ORDER BY dynamic_price ASC
+            """
+
+            results = self.fetchall(query, (check_in_date, check_in_date))
+            zimmerliste = []
+
+            for row in results:
+                (
+                    room_id, room_number, room_type, max_guests, base_price,
+                    dynamic_price, hotel_name, city, street, zip_code
+                ) = row
+
+                zimmerliste.append({
+                    "Hotel": hotel_name,
+                    "Zimmernummer": room_number,
+                    "Zimmertyp": room_type,
+                    "Max. Gäste": max_guests,
+                    "Basispreis (CHF)": base_price,
+                    "Dynamischer Preis (CHF)": dynamic_price,
+                    "Stadt": city,
+                    "Adresse": f"{street}, {zip_code}",
+                    "Check-in": check_in_date
+                })
+
+            return zimmerliste
 
 
 
