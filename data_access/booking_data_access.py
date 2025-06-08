@@ -98,3 +98,8 @@ class BookingDataAccess(BaseDataAccess):
 
     def delete_booking(self, booking: model.Booking) -> None:
         self.execute("DELETE FROM Booking WHERE booking_id = ?", (booking.booking_id,))
+
+
+
+    def read_all_booking_as_df(self):
+        pass

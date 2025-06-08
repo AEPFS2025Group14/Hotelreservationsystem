@@ -1,4 +1,5 @@
 import model
+from datetime import date
 from data_access.base_data_access import BaseDataAccess
 
 
@@ -6,7 +7,7 @@ class InvoiceDataAccess(BaseDataAccess):
     def __init__(self, db_path: str = None):
         super().__init__(db_path)
 
-    def create_new_invoice(self, booking: model.Booking, total_amount: float) -> model.Invoice:
+    def create_new_invoice(self, booking: model.Booking, total_amount: float, issue_date: date) -> model.Invoice:
         if booking is None:
             raise ValueError("Booking is required")
         if total_amount is None:
@@ -18,8 +19,9 @@ class InvoiceDataAccess(BaseDataAccess):
         """
         params = (booking.booking_id, total_amount)
         last_row_id, _ = self.execute(sql, params)
+        today = date.today()
 
-        return model.Invoice(invoice_id=last_row_id, booking=booking, issue_date=None, total_amount=total_amount)
+        return model.Invoice(invoice_id=last_row_id, booking=booking, issue_date=today, total_amount=total_amount)
 
     def read_invoice_by_id(self, invoice_id: int) -> model.Invoice | None:
         if invoice_id is None:

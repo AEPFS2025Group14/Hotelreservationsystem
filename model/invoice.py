@@ -1,6 +1,13 @@
+
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
 from datetime import date
-from .booking import Booking
-from datetime import date
+
+import model
+
+if TYPE_CHECKING:
+    from model.booking import Booking
 
 class Invoice:
     def __init__(self, invoice_id :int, issue_date: date, total_amount:float, booking: Booking =None):
@@ -20,8 +27,10 @@ class Invoice:
         self.__invoice_id : int = invoice_id
         self.__issue_date : date = issue_date
         self.__total_amount : float = total_amount
-        ##if booking is not None:
-          ##  booking.add .
+        self.__booking : Booking = None
+        if booking is not None:
+            booking.add_invoice(self)
+
 
     def __repr__(self):
         return (f"Invoice(id={self.__invoice_id!r}, issue_date={self.__issue_date!r},"
@@ -70,3 +79,20 @@ class Invoice:
         if not isinstance(total_amount, float):
             raise ValueError("Total amount is not a float")
         self.__total_amount = total_amount
+
+    @property
+    def booking(self) -> model.Booking:
+        return self.__booking
+
+    @booking.setter
+    def booking(self, booking: model.Booking) -> None:
+        if booking is not None and not isinstance(booking, model.Booking):
+            raise ValueError("booking must be a Booking instance or None")
+
+        if self.__booking is not None:
+            self.__booking.remove_invoice(self)
+
+        self.__booking = booking
+
+        if booking is not None and self not in booking.invoice:
+            booking.add_invoice(self)

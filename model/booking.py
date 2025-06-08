@@ -3,16 +3,20 @@ from typing import TYPE_CHECKING
 from datetime import date, datetime
 
 import model
+from model.invoice import Invoice
 
 if TYPE_CHECKING:
     from .guest import Guest
     from .room import Room
     from model.guest import Guest
+    from model.invoice import Invoice
+
 
 
 
 class Booking:
     def __init__(self, booking_id:int, check_in_date: date,check_out_date:date, is_cancelled:bool, total_amount:float, guest: Guest = None, room: Room = None):
+
         if not booking_id:
             raise ValueError("booking_id is required")
         if not isinstance(booking_id, int):
@@ -41,6 +45,9 @@ class Booking:
         self.__total_amount : float = total_amount
         self.__guest = guest
         self.__room: Room = room
+        self.__invoice : list[Invoice] = []
+
+
 
 
         if guest is not None:
@@ -149,9 +156,30 @@ class Booking:
             self.__room.remove(room)
             room.booking = None
 
-
-
     @property
-    def duration(self):
-        return (self.__check_out_date - self.__check_in_date).days
+    def invoice(self) -> list[Invoice]:
+        return self.__invoice.copy()
+
+
+    def add_invoice(self, invoice: Invoice) -> None:
+        from model import Invoice
+
+        if not invoice:
+            raise ValueError("invoice is required")
+        if not isinstance(invoice, Invoice):
+            raise ValueError("invoice must be an Invoice")
+        if invoice not in self.__invoice:
+            self.__invoice.append(invoice)
+            invoice.booking = self
+
+    def remove_invoice(self, invoice: Invoice) -> None:
+        from model import Invoice
+
+        if not invoice:
+            raise ValueError("invoice is required")
+        if not isinstance(invoice, Invoice):
+            raise ValueError("invoice must be an Invoice")
+        if invoice in self.__invoice:
+            self.__invoice.remove(invoice)
+            invoice.booking = None
 
