@@ -11,3 +11,8 @@ class RoomTypeManager:
 
     def search_room_by_type(self, description: str) -> model.Room:
         return self.__room_type_da.search_room_by_type(description)
+
+    def update_room_type(self, type_id: int, description: str, max_guests: int) -> bool:
+        if not description or max_guests <= 0:
+            raise ValueError("Ungültige Eingabewerte für den Zimmertyp")
+        return self.__room_type_da.update_room_type(type_id, description, max_guests)

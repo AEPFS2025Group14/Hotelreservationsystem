@@ -61,3 +61,44 @@ class RoomDataAccess(BaseDataAccess):
             room = model.Room(room_id, room_number, room_type)
             rooms.append(room)
         return rooms
+
+    def get_rooms_with_facilities(self) -> list[dict]:
+        sql = """ 
+        SELECT r.room_id, r.room_number, h.name AS hotel_name,
+        GROUP_CONCAT(f.facility_name) AS facility_name
+        FROM room r 
+        JOIN Hotel h ON r.hotel_id = h.hotel_id
+        LEFT JOIN Room_Facilities rf ON r.room_id = rf.room_id
+        LEFT JOIN Facilities f ON rf.facility_id = f.facility_id
+        GROUP BY r.room_id, r.room_number, h.name 
+        ORDER BY r.room_id
+        """
+
+        result = self.fetchall(sql)
+        zimmerliste = []
+        for row in result:
+            room_id, room_number, hotel_name, ausstattung = row
+            zimmerliste.append({
+                "Zimmer-ID" : room_id,
+                "Zimmernummer" : room_number,
+                "Hotel" : hotel_name,
+                "Ausstattung" : ausstattung or "Keine"
+            })
+
+        return zimmerliste
+
+    def update_room_price(self, room_id : int, new_price: float) -> bool:
+        sql = """
+        UPDATE Room 
+        SET price_per_night = ?
+        WHERE room_id = ?
+        """
+
+        params = (new_price, room_id)
+        _, row_count = self.execute(sql, params)
+        return row_count > 0
+
+
+
+
+

@@ -31,3 +31,13 @@ class RoomFacilityDataAccess(BaseDataAccess):
         DELETE FROM Room_Facilities WHERE room_id = ? AND facility_id = ?
         """
         self.execute(sql, (room.room_id, facility.facility_id))
+
+    def update_facility(self, facility_id: int, facility_name: str) -> bool:
+        sql = """
+        UPDATE Facilities 
+        SET facility_name = ?
+        WHERE facility_id = ?
+        """
+        params = (facility_name, facility_id)
+        _, row_count = self.execute(sql, params)
+        return row_count >0
