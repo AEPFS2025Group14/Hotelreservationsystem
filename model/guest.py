@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 
 class Guest:
-    def __init__(self, guest_id: int, last_name: str, first_name: str, email: str, address: Address = None):
+    def __init__(self, guest_id: int, first_name: str, last_name: str, email: str, address: Address = None):
 
         if not guest_id:
             raise ValueError("Guest ID is required")

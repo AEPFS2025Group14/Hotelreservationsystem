@@ -1,4 +1,6 @@
 import pandas as pd
+
+import data_access
 import model
 from data_access.base_data_access import BaseDataAccess
 
@@ -6,13 +8,14 @@ from data_access.base_data_access import BaseDataAccess
 class GuestDataAccess(BaseDataAccess):
     def __init__(self, db_path: str = None):
         super().__init__(db_path)
+        self.__address_da = data_access.AddressDataAccess(db_path)
 
     def create_new_guest(self, first_name: str, last_name: str, email: str) -> model.Guest:
         sql = """INSERT INTO Guest (first_name, last_name, email) VALUES (?, ?, ?, ?)"""
         last_row_id, _ = self.execute(sql, (first_name, last_name, email))
         return model.Guest(last_row_id, first_name, last_name, email)
 
-    def read_guest_by_id(self, guest_id: int, address_da) -> model.Guest | None:
+    def read_guest_by_id(self, guest_id: int) -> model.Guest | None:
         sql = """
         SELECT guest_id, first_name, last_name, email, address_id FROM Guest WHERE guest_id = ?"""
         params = (guest_id,)
@@ -22,13 +25,13 @@ class GuestDataAccess(BaseDataAccess):
             guest_id, first_name, last_name, email, address_id = result
             if email is None:
                 email = ""  # Standardwert oder leerer String
-            address = address_da.read_address_by_id(address_id) if address_id else None
+            address = self.__address_da.read_address_by_id(address_id) if address_id else None
             return model.Guest(guest_id, first_name, last_name, email, address)
         return None
 
     def read_all_guests(self) -> list[model.Guest]:
-        rows = self.fetchall("SELECT * FROM Guest")
-        return [model.Guest(*row) for row in rows]
+        rows = self.fetchall("SELECT guest_id, first_name, last_name, email, address_id FROM Guest")
+        return [model.Guest(guest_id, first_name, last_name, email) for guest_id, first_name, last_name, email in rows]
 
     def read_all_guests_as_df(self) -> pd.DataFrame:
         return pd.read_sql("SELECT * FROM Guest", self._connect(), index_col="guest_id")

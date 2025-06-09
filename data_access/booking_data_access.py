@@ -5,7 +5,7 @@ import model
 
 
 class BookingDataAccess(BaseDataAccess):
-    def __init__(self, db_path: str) -> None:
+    def __init__(self, db_path: str = None) -> None:
         super().__init__(db_path)
 
     def create_new_booking(self,check_in_date: date,check_out_date:date, is_cancelled:bool, total_amount:float, guest: model.Guest, room: model.Room) -> model.Booking:
@@ -82,6 +82,8 @@ class BookingDataAccess(BaseDataAccess):
         sql = "SELECT * FROM Booking"
         return pd.read_sql(sql, self._connect(), index_col='booking_id')
 
+
+
     def cancel_booking(self, booking: model.Booking) -> None:
         sql = """
         UPDATE Booking SET is_cancelled = 1, total_amount = 0 WHERE booking_id = ?
@@ -138,4 +140,25 @@ class BookingDataAccess(BaseDataAccess):
             })
 
         return buchungen
+
+def get_booking_by_id(self, booking_id: int) -> model.Booking | None:
+    sql = """
+        SELECT booking_id, guest_id, room_id, check_in_date, check_out_date, is_cancelled, total_amount
+        FROM Booking
+        WHERE booking_id = ?
+    """
+    row = self._fetchone(sql, (booking_id,))
+    if row:
+        guest = self._load_guest_by_id(row["guest_id"])
+        room = self._load_room_by_id(row["room_id"])
+        return model.Booking(
+            booking_id=row["booking_id"],
+            guest=guest,
+            room=room,
+            check_in_date=row["check_in_date"],
+            check_out_date=row["check_out_date"],
+            is_cancelled=bool(row["is_cancelled"]),
+            total_amount=row["total_amount"]
+        )
+    return None
 

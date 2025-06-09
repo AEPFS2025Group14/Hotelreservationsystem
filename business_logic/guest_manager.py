@@ -16,8 +16,8 @@ class GuestManager:
     def create_guest(self, last_name: str, first_name: str, email: str) -> model.Guest:
         return self.__guest_da.create_new_guest(first_name=first_name, last_name=last_name, email=email)
 
-    def read_guest_by_id(self, guest_id: int, address_da) -> model.Guest | None:
-        return self.__guest_da.read_guest_by_id(guest_id,address_da)
+    def read_guest_by_id(self, guest_id: int) -> model.Guest | None:
+        return self.__guest_da.read_guest_by_id(guest_id)
 
     def read_guest(self, guest_id: int) -> model.Guest:
         return self.__guest_da.read_guest_by_id(guest_id)

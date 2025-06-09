@@ -6,9 +6,17 @@ import data_access
 from model import Guest, Room
 
 
+class InvalidBookingException(Exception):
+    pass
+
+
+class AlreadyCancelledException(InvalidBookingException):
+    pass
+
 class BookingManager:
     def __init__(self) -> None:
         self.__booking_da = data_access.BookingDataAccess()
+        self.__default_processing_fee_rate = 0.2
 
     def create_new_booking(self, check_in_date: date, check_out_date: date, is_cancelled: bool, total_amount: float, guest: model.Guest, room: model.Room) -> model.Booking:
         return self.__booking_da.create_new_booking(check_in_date=check_in_date, check_out_date=check_out_date,
@@ -24,19 +32,37 @@ class BookingManager:
         return self.__booking_da.read_all_bookings()
 
     def read_all_bookings_as_df(self) -> pd.DataFrame:
-        return self.__booking_da.read_all_booking_as_df()
-
-    def cancel_booking(self, booking: model.Booking) -> None:
-        self.__booking_da.cancel_booking(booking)
+        return self.__booking_da.read_all_bookings_as_df()
 
     def update_booking(self, booking: model.Booking) -> None:
+        if not booking:
+            raise InvalidBookingException("None can not be updated")
         self.__booking_da.update_booking(booking)
 
     def delete_booking(self, booking: model.Booking) -> None:
         self.__booking_da.delete_booking(booking)
 
     def get_booking_by_id(self, booking_id: int) -> model.Booking:
-        return self.__booking_da.get_booking_by_id()
+        return self.__booking_da.read_booking_by_id(booking_id)
 
     def get_all_bookings(self) -> list[dict]:
         return self.__booking_da.get_all_bookings()
+
+    def cancel_booking(self, booking: model.Booking) -> None:
+        if not booking:
+            raise InvalidBookingException("None can not be cancelled")
+
+        # Bereits storniert?
+        if booking.is_cancelled:
+            raise AlreadyCancelledException("Booking is already cancelled")
+
+        # Buchung in der Vergangenheit?
+        today = date.today()
+        if booking.check_in_date <= today:
+            raise InvalidBookingException("Booking is in the past")
+
+        # Stornierung durchführen
+        booking.is_cancelled = True
+        processing_fee = booking.total_amount * self.__default_processing_fee_rate
+        booking.total_amount = processing_fee
+        self.update_booking(booking)
