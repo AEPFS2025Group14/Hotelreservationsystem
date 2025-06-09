@@ -15,9 +15,9 @@ class InvoiceDataAccess(BaseDataAccess):
 
         sql = """
         INSERT INTO Invoice (booking_id, issue_date, total_amount)
-        VALUES (?, DATE('now'), ?)
+        VALUES (?, ?, ?)
         """
-        params = (booking.booking_id, total_amount)
+        params = (booking.booking_id,  issue_date or date.today(), total_amount)
         last_row_id, _ = self.execute(sql, params)
         today = date.today()
 

@@ -19,10 +19,10 @@ class Invoice:
             raise ValueError("Issue date is required")
         if not isinstance(issue_date, date):
             raise ValueError("Issue date is not a date")
-        if not total_amount:
-            raise ValueError("Total amount is required")
+        if total_amount is None:
+            raise ValueError("total_amount is required")
         if not isinstance(total_amount, float):
-            raise ValueError("Total amount is not a float")
+            raise ValueError("total_amount must be a float")
 
         self.__invoice_id : int = invoice_id
         self.__issue_date : date = issue_date
@@ -72,12 +72,13 @@ class Invoice:
     @property
     def total_amount(self) ->float:
         return self.__total_amount
+
     @total_amount.setter
-    def total_amount(self, total_amount : float) -> None:
-        if not total_amount:
-            raise ValueError("Total amount is required")
+    def total_amount(self, total_amount: float) -> None:
+        if total_amount is None:
+            raise ValueError("total_amount is required")
         if not isinstance(total_amount, float):
-            raise ValueError("Total amount is not a float")
+            raise ValueError("total_amount must be a float")
         self.__total_amount = total_amount
 
     @property

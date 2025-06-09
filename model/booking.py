@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 class Booking:
     def __init__(self, booking_id:int, check_in_date: date,check_out_date:date, is_cancelled:bool, total_amount:float, guest: Guest = None, room: Room = None):
 
-        if not booking_id:
+        if booking_id is None:
             raise ValueError("booking_id is required")
         if not isinstance(booking_id, int):
             raise ValueError("booking_id must be an integer")
@@ -33,10 +33,10 @@ class Booking:
             raise ValueError("is_cancelled is required")
         if not isinstance(is_cancelled, bool):
             raise ValueError("is_cancelled must be an boolean")
-        if not total_amount:
+        if total_amount is None:
             raise ValueError("total_amount is required")
         if not isinstance(total_amount, float):
-            raise ValueError("total_amount must be an float")
+            raise ValueError("total_amount must be a float")
 
         self.__booking_id : int = booking_id
         self.__check_in_date : date = check_in_date
@@ -111,11 +111,11 @@ class Booking:
         return self.__total_amount
 
     @total_amount.setter
-    def total_amount(self, total_amount :float) -> None:
-        if not total_amount:
+    def total_amount(self, total_amount: float) -> None:
+        if total_amount is None:
             raise ValueError("total_amount is required")
         if not isinstance(total_amount, float):
-            raise ValueError("total_amount must be an float")
+            raise ValueError("total_amount must be a float")
         self.__total_amount = total_amount
 
 
