@@ -32,14 +32,17 @@ Daliah war verantwortlich für die technische Grundlage und den Aufbau des Hotel
   - Einbindung und Organisation der SQLite-Datenbanken (`working_db.db`, `Script.sql`)
   - Git-Konfiguration für sauberen Workflow
 
+
 - **Modellierung & Datenstruktur:**
   - Erstellung aller Model-Klassen (`Guest`, `Hotel`, `Room`, `Booking`, `Invoice`, `Facility`, `RoomType`)
   - Einbindung von Beziehungen entsprechend dem UML-Diagramm (inkl. Komposition/Aggregation)
+
 
 - **Data Access & SQL:**
   - Entwicklung und Strukturierung sämtlicher `*_data_access.py`-Dateien
   - Zentrale SQL-Abfragen und Hilfsfunktionen in `SQL.py`
   - Verarbeitung hotel- und zimmerbezogener Daten über strukturierte SQL-Logik
+
 
 - **Business Logic Layer:**
   - Aufbau der Geschäftslogik-Komponenten:
@@ -50,16 +53,20 @@ Daliah war verantwortlich für die technische Grundlage und den Aufbau des Hotel
   - Implementierung erweiterter Abläufe wie Rechnungslogik, Validierungen, Datenroutinen
   - User Story 5 & 6 
 
+
 - **Zusätzliche Features & Utility:**
   - Implementierung von `email_sender.py` zur optionalen Buchungsbestätigung per E-Mail
   - Anpassung und Strukturpflege der Utility-Funktionen (`utils/`)
+
 
 - **Fehlerbehandlung & Konfliktlösung:**
   - Commit am **26.05.2025**: Lösung von Merge-Konflikten und Integration von Hotfixes
   - Verbesserung der Abfragen für spezifische Hotels und Zimmerzuordnung
 
+
 - **Dokumentation:**
   - Verfasserin der **README.md-Dokumentation**
+
 
 ### 👩 Katharina Hagen  
 **Rolle: User Stories, UI/UX, Testing, Versionskontrolle, CLI-Interaktion**
@@ -78,20 +85,24 @@ Katharina war für die iterative Entwicklung der User Stories, die Gestaltung de
     - Überarbeitung von **User Story 3** (08.06.2025 – 22:59)
   - Korrektur und Feinschliff von Eingabelogik & Datenabfragen im Rahmen dieser Stories
 
+
 - **UI- & CLI-Interaktion:**
   - Gestaltung der Benutzerführung im CLI
   - Eingabevalidierung & Fehlerbehandlung über `Inputs.py` und eigene Utils
   - Umsetzung und Verknüpfung der Eingabeflüsse mit Business-Logik
+
 
 - **Testing & Konfliktlösung:**
   - Wiederholtes Refactoring, Testing und Reviews während der Story-Phasen
   - Pflege des konsistenten Codes zwischen Modellierung, Datenzugriff und Logik
   - Merge-Koordination & Konfliktlösungen mit Pull Requests
 
+
 - **Technische Unterstützung:**
   - Erweiterung von `sql.py` mit spezifischen Abfragen (z. B. Zimmerfilter)
   - Unterstützung bei der Modellintegration & Datenbankabgleich (`model: guest, hotel, room` etc.)
 
+### Präsentation und Coaching
 
 - **Tutorials / Demo** – Daliah Beck, Katharina Hagen  
 - **Coaches (extern)** – Charuta Pande, Phillip Gachnang
