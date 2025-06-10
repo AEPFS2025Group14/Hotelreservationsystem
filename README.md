@@ -1,5 +1,4 @@
-# AEP_HotelReservationSystem
-
+# Hotel Reservation System – AEP Projekt (FS2025)
 
 ## 🧾 Projektbeschreibung
 
@@ -9,6 +8,13 @@ Ziel ist die exemplarische Implementierung eines Hotelreservierungssystems unter
 Das Projekt wurde vollständig mit PyCharm umgesetzt, inkl. Versionsverwaltung über GitHub. Eine Deepnote-Integration wurde nicht verwendet
 > **Abstract:**  
 Diese Arbeit demonstriert, wie sich reale Geschäftsprozesse – dargestellt durch User Stories – systematisch in Codestrukturen überführen lassen. Zum Einsatz kommen objektorientierte Programmierung, relationale Datenbanken (SQLite), Schichtentrennung (N-Tier Architektur) sowie Tools zur Visualisierung und PDF-Ausgabe.
+
+🎥 [Hier klicken, um unsere Projektpräsentation anzusehen](https://link-zu-eurem-video)
+
+> In diesem Video demonstrieren wir unsere Lösung wie in einer Live-Präsentation.  
+> Wir zeigen exemplarisch zwei ausgewählte User Stories, die wir besonders gelungen finden, und erklären dabei jeweils die dahinterliegende Logik und den Code.  
+> Zudem erläutern wir abwechselnd verschiedene Aspekte des Projekts, insbesondere unsere jeweiligen Beiträge.  
+> Beide Teammitglieder sind in der Präsentation zu sehen.
 
 ---
 
