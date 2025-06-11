@@ -35,6 +35,7 @@ class Guest:
         self.__first_name : str = first_name
         self.__email : str = email
         self.__booking: list[Booking] = []
+        self.__address: Address = address
 
 
 

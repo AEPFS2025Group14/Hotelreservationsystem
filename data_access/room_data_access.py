@@ -58,7 +58,7 @@ class RoomDataAccess(BaseDataAccess):
             room_id, room_number, type_id, price_per_night = row
             print(type(room_id))
             room_type = self.__room_type_da.read_room_type_by(type_id)
-            room = model.Room(room_id, room_number, room_type)
+            room = model.Room(room_id, room_number, room_type, price_per_night=price_per_night)
             rooms.append(room)
         return rooms
 

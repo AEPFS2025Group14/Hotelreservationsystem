@@ -1,12 +1,11 @@
-import os
-import pandas as pd
-
+from datetime import datetime
 import model
 from model.room_type import RoomType
 from model.address import Address
 import data_access
 from business_logic.room_type_manager import RoomTypeManager
 from model.hotel import Hotel
+from business_logic.booking_manager import BookingManager
 
 
 class HotelManager:
@@ -14,49 +13,84 @@ class HotelManager:
         self.__hotel_da = data_access.HotelDataAccess()
         self.__room_type_manager = RoomTypeManager()
 
-    def create_new_hotel(self, name:str, stars:int, address:Address =None) -> model.Hotel:
-        return self.__hotel_da.create_new_hotel(name= name, stars = stars, address = address)
+    def create_new_hotel(self, name: str, stars: int, address: Address = None) -> model.Hotel:
+        self.__validate_name(name)
+        self.__validate_stars(stars)
+
+        return self.__hotel_da.create_new_hotel(name=name, stars=stars, address=address)
 
     def read_hotel(self, hotel_id: int) -> model.Hotel:
         return self.__hotel_da.read_hotel_by_id(hotel_id)
 
     def read_hotels_by_city(self, city: str) -> list[model.Hotel]:
+        self.__validate_city(city)
+        city = city.strip().upper()
         return self.__hotel_da.read_hotels_by_city(city)
 
     def search_hotels_by_city_and_stars(self, city: str, stars: int) -> list[model.Hotel]:
+        self.__validate_city(city)
+        self.__validate_stars(stars)
+        city = city.strip().upper()
         return self.__hotel_da.search_hotels_by_city_and_stars(city, stars)
 
     def search_hotels_by_city(self, city: str) -> list[model.Hotel]:
+        self.__validate_city(city)
+        city = city.strip().upper()
         return self.__hotel_da.search_hotels_by_city(city)
 
-    def update_hotel(self, hotel_id: int, name: str, stars: int, address_id : int) -> bool:
-        return self.__hotel_da.update_hotel(hotel_id, name = name, stars = stars, address_id = address_id)
+    def update_hotel(self, hotel_id: int, name: str, stars: int, address_id: int) -> bool:
+        self.__validate_name(name)
+        self.__validate_stars(stars)
+        name = name.strip().upper()
+        return self.__hotel_da.update_hotel(hotel_id, name=name, stars=stars, address_id=address_id)
 
     def delete_hotel(self, hotel_id) -> bool:
         return self.__hotel_da.delete_hotel(hotel_id)
 
     def search_hotels_for_guests(self, city: str, stars: int, max_guests: int, room_typ_id=None,
-                                     description=None) -> list[model.Hotel]:
+                                  description=None) -> list[model.Hotel]:
+        self.__validate_city(city)
+        self.__validate_stars(stars)
+        city = city.strip().upper()
         return self.__hotel_da.search_hotels_for_guests(city, stars, max_guests, room_typ_id, description)
 
     def search_hotel_Aufenthalt(self, city: str, check_in_date: str, check_out_date: str) -> list[model.Hotel]:
+        self.__validate_city(city)
+        check_in = datetime.strptime(check_in_date, "%Y-%m-%d").date()
+        check_out = datetime.strptime(check_out_date, "%Y-%m-%d").date()
+
+        BookingManager.validate_booking_dates(check_in, check_out)
+        city = city.strip().upper()
         return self.__hotel_da.search_hotel_Aufenthalt(city, check_in_date, check_out_date)
 
     def search_hotel_combinated(self, city: str, check_in_date: str, check_out_date: str,
-                                min_stars: int = 0, max_guests: int = None) -> list[model.Hotel]:
+                                 min_stars: int = 0, max_guests: int = None) -> list[model.Hotel]:
+        self.__validate_city(city)
+        check_in = datetime.strptime(check_in_date, "%Y-%m-%d").date()
+        check_out = datetime.strptime(check_out_date, "%Y-%m-%d").date()
+
+        BookingManager.validate_booking_dates(check_in, check_out)
+        city = city.strip().upper()
         return self.__hotel_da.search_hotel_combinated(city, check_in_date, check_out_date, min_stars, max_guests)
 
     def zeige_Information_pro_Hotel(self) -> list[model.Hotel]:
         return self.__hotel_da.zeige_Information_pro_Hotel()
 
     def search_hotel_print_rooms(self, city: str, description=None, max_guests=None, room_typ_id=None,
-                                 address_id=None, zip_code=None, street=None) -> list[model.Hotel]:
-        return self.search_hotel_print_rooms(city, description, max_guests, room_typ_id)
+                                  address_id=None, zip_code=None, street=None) -> list[model.Hotel]:
+        self.__validate_city(city)
+        city = city.strip().upper()
+        return self.__hotel_da.search_hotel_print_rooms(city, description, max_guests, room_typ_id)
 
     def show_Information_per_room(self, nights: int) -> list[dict]:
         return self.__hotel_da.show_Information_per_room(nights)
 
     def zeige_verfuegbare_zimmer(self, check_in_date: str, check_out_date: str) -> list[dict]:
+        check_in = datetime.strptime(check_in_date, "%Y-%m-%d").date()
+        check_out = datetime.strptime(check_out_date, "%Y-%m-%d").date()
+
+        BookingManager.validate_booking_dates(check_in, check_out)
+
         return self.__hotel_da.zeige_verfuegbare_zimmer(check_in_date, check_out_date)
 
     def all_room_types(self, hotel: Hotel) -> list[model.RoomType]:
@@ -71,7 +105,29 @@ class HotelManager:
             room_types.append(room_type)
         return room_types
 
-    def get_dynamic_room_prices(self, check_in_date: str) -> list[dict]:
+
+    def get_dynamic_room_prices(self, check_in_date: str, check_out_date: str) -> list[dict]:
+        check_in = datetime.strptime(check_in_date, "%Y-%m-%d").date()
+        check_out = datetime.strptime(check_out_date, "%Y-%m-%d").date()
+
+        BookingManager.validate_booking_dates(check_in, check_out)
+
         return self.__hotel_da.get_dynamic_room_prices(check_in_date)
 
+    # ----- Hilfsfunktionen zur Validierung -----
+    def __validate_stars(self, stars: int):
+        if not isinstance(stars, int) or stars < 1 or stars > 5:
+            raise ValueError("Sterne müssen eine ganze Zahl zwischen 1 und 5 sein.")
+
+    def __validate_city(self, city: str):
+        if not city or not city.strip():
+            raise ValueError("Stadt darf nicht leer sein.")
+
+    def __validate_name(self, name: str):
+        if not name or not name.strip():
+            raise ValueError("Hotelname darf nicht leer sein.")
+
+    def __validate_address(self, address: Address):
+        if not address or not address.city or not address.street or not address.zip_code:
+            raise ValueError("Adresse ist unvollständig oder fehlt.")
 

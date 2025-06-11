@@ -13,8 +13,8 @@ class GuestManager:
     def __init__(self):
         self.__guest_da = data_access.GuestDataAccess()
 
-    def create_guest(self, last_name: str, first_name: str, email: str) -> model.Guest:
-        return self.__guest_da.create_new_guest(first_name=first_name, last_name=last_name, email=email)
+    def create_guest(self, last_name: str, first_name: str, email: str, address:model.Address = None) -> model.Guest:
+        return self.__guest_da.create_new_guest(first_name=first_name, last_name=last_name, email=email, address=address)
 
     def read_guest_by_id(self, guest_id: int) -> model.Guest | None:
         return self.__guest_da.read_guest_by_id(guest_id)

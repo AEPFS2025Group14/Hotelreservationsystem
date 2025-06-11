@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 
 class Room:
-    def __init__(self, room_id:int, room_number: str, room_type:RoomType, price_per_night = float, hotel: Hotel = None):
+    def __init__(self, room_id:int, room_number: str, room_type:RoomType, price_per_night : float, hotel: Hotel = None):
         from .room_type import RoomType
         if not room_id:
             raise ValueError("Room ID is required")

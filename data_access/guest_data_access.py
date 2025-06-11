@@ -10,10 +10,13 @@ class GuestDataAccess(BaseDataAccess):
         super().__init__(db_path)
         self.__address_da = data_access.AddressDataAccess(db_path)
 
-    def create_new_guest(self, first_name: str, last_name: str, email: str) -> model.Guest:
-        sql = """INSERT INTO Guest (first_name, last_name, email) VALUES (?, ?, ?, ?)"""
-        last_row_id, _ = self.execute(sql, (first_name, last_name, email))
-        return model.Guest(last_row_id, first_name, last_name, email)
+    def create_new_guest(self, first_name: str, last_name: str, email: str, address: model.Address = None) -> model.Guest:
+        address_id = None
+        if address:
+            address_id = self.__address_da.create_new_address(address)
+        sql = """INSERT INTO Guest (first_name, last_name, email, address_id) VALUES (?, ?, ?, ?)"""
+        last_row_id, _ = self.execute(sql, (first_name, last_name, email, address_id))
+        return model.Guest(last_row_id, first_name, last_name, email, address_id)
 
     def read_guest_by_id(self, guest_id: int) -> model.Guest | None:
         sql = """

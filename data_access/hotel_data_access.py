@@ -20,7 +20,7 @@ class HotelDataAccess(BaseDataAccess):
                     SELECT h.hotel_id, h.name, h.stars, a.address_id, a.city, a.street, a.zip_code
                     FROM Hotel h
                     JOIN Address a ON h.address_id = a.address_id
-                    WHERE a.city = ?
+                    WHERE UPPEr(a.city) = ?
                 """
             results = self.fetchall(query, (city,))
             hotels = []
@@ -32,15 +32,19 @@ class HotelDataAccess(BaseDataAccess):
             return hotels
 
         def search_hotels_by_city_and_stars(self, city: str, stars: int) -> list[model.Hotel]:
-
+                print(f"DEBUG: city in DAO = {city}, stars = {stars}")
                 query = """ 
                     SELECT h.hotel_id, h.name, h.stars, a.address_id, a.city, a.street, a.zip_code
                     FROM Hotel h
                     JOIN Address a ON h.address_id = a.address_id
-                    WHERE a.city = ? AND h.stars = ?
+                    WHERE UPPER(a.city) = ? AND h.stars = ?
                     """
 
-                results = self.fetchall(query, (city, stars))
+
+                print(f"DEBUG SQL PARAMS: {city}, {stars}")
+
+
+                results = self.fetchall(query, (city.upper(), stars))
                 hotels = []
                 for row in results:
                     hotel_id, name, stars, address_id, city, street, zip_code = row
@@ -64,7 +68,7 @@ class HotelDataAccess(BaseDataAccess):
                     JOIN 
                         Room_Type rt ON r.type_id = rt.type_id
                     WHERE 
-                        a.city = ? AND h.stars = ? AND rt.max_guests >= ?
+                        UPPER(a.city) = ? AND h.stars = ? AND rt.max_guests >= ?
                 """
                 results = self.fetchall(query, (city, stars, max_guests))
                 hotels_by_id = {}
@@ -93,7 +97,7 @@ class HotelDataAccess(BaseDataAccess):
                     JOIN Room ON Hotel.hotel_id = Room.hotel_id
                     JOIN Room_Type ON Room.type_id = Room_Type.type_id
                     JOIN Address ON Hotel.address_id = Address.address_id
-                    WHERE Address.city = ?
+                    WHERE UPPER(Address.city) = ?
                       AND Room.room_id NOT IN (
                         SELECT room_id
                         FROM Booking
@@ -134,7 +138,7 @@ class HotelDataAccess(BaseDataAccess):
                     JOIN Room ON Hotel.hotel_id = Room.hotel_id
                     JOIN Room_Type ON Room.type_id = Room_Type.type_id
                     JOIN Address ON Hotel.address_id = Address.address_id
-                    WHERE Address.city = ?
+                    WHERE UPPER(Address.city) = ?
                       AND Hotel.stars >= ?
                       AND Room.room_id NOT IN (
                           SELECT room_id
@@ -210,7 +214,7 @@ class HotelDataAccess(BaseDataAccess):
                     JOIN ROOM ON Hotel.hotel_id = Room.hotel_id
                     JOIN Room_Type Room_Type ON Room.type_id = Room_Type.type_id
                     JOIN Address ON Hotel.address_id = Address.address_id
-                    WHERE Address.city = ?    
+                    WHERE UPPER(Address.city) = ?    
                 """
                 results = self.fetchall(query, (city,))
                 hotels = []
@@ -308,21 +312,15 @@ class HotelDataAccess(BaseDataAccess):
             sql = """
             SELECT hotel_id, name, stars, Address.address_id, street, city, zip_code FROM Hotel
             JOIN Address ON Address.address_id = Hotel.address_id
-            WHERE Address.city = ?
+            WHERE UPPER(Address.city) = ?
             """
-            params = tuple([city])
+            params = (city,)
             results = self.fetchall(sql, params)
             hotels = []
             for row in results:
-                room_id, room_number, description, max_guests, room_type_id, name, stars, price_per_night, hotel_id = row
-
-                room_type = RoomType(room_type_id, description, max_guests)
-                room = Room(room_id, room_number, room_type, price_per_night)
-
-                address = None  # wenn nicht im SELECT enthalten
+                hotel_id, name, stars, address_id, street, city_name, zip_code = row
+                address = Address(address_id, street, city_name, zip_code)
                 hotel = Hotel(hotel_id, name, stars, address)
-                hotel.rooms = [room]
-
                 hotels.append(hotel)
             return hotels
 

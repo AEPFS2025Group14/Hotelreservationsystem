@@ -153,11 +153,13 @@ class BookingDataAccess(BaseDataAccess):
         return pd.read_sql(sql, self._connect(), index_col='booking_id')
 
     def cancel_booking(self, booking: model.Booking) -> model.Booking:
+        if booking is None:
+            raise ValueError(" cancel_booking wurde mit None aufgerufen – ungültige Buchung.")
+
         sql = """
         UPDATE Booking SET is_cancelled = 1, total_amount = 0 WHERE booking_id = ?
         """
         self.execute(sql, (booking.booking_id,))
-
 
         booking.is_cancelled = True
         booking.total_amount = 0.0
