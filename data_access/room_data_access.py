@@ -87,13 +87,12 @@ class RoomDataAccess(BaseDataAccess):
 
         return zimmerliste
 
-    def update_room_price(self, room_id : int, new_price: float) -> bool:
+    def update_price(self, room_id: int, new_price: float) -> bool:
         sql = """
         UPDATE Room 
         SET price_per_night = ?
         WHERE room_id = ?
         """
-
         params = (new_price, room_id)
         _, row_count = self.execute(sql, params)
         return row_count > 0

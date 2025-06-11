@@ -27,3 +27,6 @@ class RoomManager:
 
     def get_rooms_with_facilities(self) -> list[dict]:
         return self.__room_da.get_rooms_with_facilities()
+
+    def update_price(self, room_id: int, new_price: float) -> bool:
+        return self.__room_da.update_price(room_id=room_id, new_price=new_price)

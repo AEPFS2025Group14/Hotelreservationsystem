@@ -32,29 +32,10 @@ class GuestDataAccess(BaseDataAccess):
             return model.Guest(guest_id, first_name, last_name, email, address)
         return None
 
-    def read_all_guests(self) -> list[model.Guest]:
-        rows = self.fetchall("SELECT guest_id, first_name, last_name, email, address_id FROM Guest")
-        return [model.Guest(guest_id, first_name, last_name, email) for guest_id, first_name, last_name, email in rows]
-
-    def read_all_guests_as_df(self) -> pd.DataFrame:
-        return pd.read_sql("SELECT * FROM Guest", self._connect(), index_col="guest_id")
-
-    def read_guests_like_name(self, name: str) -> list[model.Guest]:
-        sql = "SELECT * FROM Guest WHERE first_name LIKE ? OR last_name LIKE ?"
-        params = (f"%{name}%", f"%{name}%")
-        rows = self.fetchall(sql, params)
-        return [model.Guest(*row) for row in rows]
-
-    def read_guests_like_name_as_df(self, name: str) -> pd.DataFrame:
-        sql = "SELECT * FROM Guest WHERE first_name LIKE ? OR last_name LIKE ?"
-        params = (f"%{name}%", f"%{name}%")
-        return pd.read_sql(sql, self._connect(), params=params, index_col="guest_id")
-
+    ##Zusätzliche Funktionen welche nützliche sein können aber nicht gefragt waren in den Userstories.
     def update_guest(self, guest: model.Guest) -> None:
         sql = """
         UPDATE Guest SET first_name = ?, last_name = ?, email = ? WHERE guest_id = ?
         """
         self.execute(sql, (guest.first_name, guest.last_name, guest.email, guest.guest_id))
 
-    def delete_guest(self, guest: model.Guest) -> None:
-        self.execute("DELETE FROM Guest WHERE guest_id = ?", (guest.guest_id,))

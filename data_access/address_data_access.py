@@ -21,23 +21,15 @@ class AddressDataAccess(BaseDataAccess):
         last_row_id, row_count = self.execute(sql, params)
         return model.Address(address_id=last_row_id, street=street, city=city, zip_code=zip_code)
 
-
-
     def read_address_by_id(self, address_id: int) -> model.Address | None:
         sql = """
-        SELECT address_id, Street, Zip_Code, City FROM Address WHERE address_id = ?
+        SELECT address_id, street, city, zip_code FROM Address WHERE address_id = ?
         """
         params = (address_id,)
         result = self.fetchone(sql, params)
         if result:
-            address_id, street, zip_code, city = result
-            return model.Address(address_id, street, zip_code, city)
+            address_id, street, city, zip_code = result
+            return model.Address(address_id, street, city, zip_code)
         else:
             return None
 
-    def read_all_addresses(self) -> list[model.Address]:
-        sql = """
-        SELECT address_id, Street, Zip_Code, City FROM Address ORDER BY address_id
-        """
-        rows = self.fetchall(sql)
-        return [model.Address(address_id, street, zip_code, city) for address_id, street, zip_code, city in rows]

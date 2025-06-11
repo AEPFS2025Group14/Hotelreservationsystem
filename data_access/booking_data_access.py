@@ -148,9 +148,6 @@ class BookingDataAccess(BaseDataAccess):
 
         return result
 
-    def read_all_bookings_as_df(self) -> pd.DataFrame:
-        sql = "SELECT * FROM Booking"
-        return pd.read_sql(sql, self._connect(), index_col='booking_id')
 
     def cancel_booking(self, booking: model.Booking) -> model.Booking:
         if booking is None:
@@ -166,6 +163,7 @@ class BookingDataAccess(BaseDataAccess):
 
         return booking
 
+
     def update_booking(self, booking: model.Booking) -> None:
         sql = """
         UPDATE Booking SET guest_id = ?, room_id = ?, check_in_date = ?, check_out_date = ?, is_cancelled = ?, total_amount = ?
@@ -174,13 +172,12 @@ class BookingDataAccess(BaseDataAccess):
 
         params = tuple([booking.guest.guest_id, booking.room.room_id, booking.check_in_date, booking.check_out_date,])
 
-    def delete_booking(self, booking: model.Booking) -> None:
-        self.execute("DELETE FROM Booking WHERE booking_id = ?", (booking.booking_id,))
 
     def get_all_bookings(self) -> list[dict]:
 
         query = """
             SELECT 
+                b.booking_id,
                 b.booking_id,
                 b.check_in_date,
                 b.check_out_date,

@@ -7,6 +7,7 @@ from .base_data_access import BaseDataAccess
 from .room_data_access import RoomDataAccess
 from model.hotel import Hotel
 from model.address import Address
+from datetime import datetime, date
 
 
 class HotelDataAccess(BaseDataAccess):
@@ -204,37 +205,61 @@ class HotelDataAccess(BaseDataAccess):
 
                 return hotels
 
+        def search_hotel_print_rooms(self, city: str, check_in_date: date = None, check_out_date: date = None,
+                                     description=None, max_guests=None, room_type_id=None,
+                                     address_id=None, zip_code=None, street=None, room_number=None) -> list[
+            model.Hotel]:
+            query = """
+                SELECT 
+                    Room.room_id, Room.room_number,
+                    Room_Type.description, Room_Type.max_guests, Room_Type.type_id,
+                    Room.price_per_night,
+                    Hotel.name, Hotel.stars, Hotel.hotel_id,
+                    Address.address_id, Address.street, Address.city, Address.zip_code
+                FROM Hotel 
+                JOIN Room ON Hotel.hotel_id = Room.hotel_id
+                JOIN Room_Type ON Room.type_id = Room_Type.type_id
+                JOIN Address ON Hotel.address_id = Address.address_id
+                WHERE UPPER(Address.city) = ?
+            """
 
-        def search_hotel_print_rooms(self, city: str, description=None, max_guests=None, room_type_id=None,
-                                     address_id=None, zip_code=None, street=None, room_number=None) -> list[model.Hotel]:
-                query = """
-                    SELECT Room.room_id, Room.room_number, Room_Type.description, Room_Type.max_guests, Room_Type.type_id,
-                            Hotel.name, Hotel.stars, Room.price_per_night, Hotel.hotel_id, Address.address_id, Address.street, Address.city, Address.zip_code 
-                    FROM Hotel 
-                    JOIN ROOM ON Hotel.hotel_id = Room.hotel_id
-                    JOIN Room_Type Room_Type ON Room.type_id = Room_Type.type_id
-                    JOIN Address ON Hotel.address_id = Address.address_id
-                    WHERE UPPER(Address.city) = ?    
+            params = [city]
+
+            if check_in_date and check_out_date:
+                query += """
+                    AND Room.room_id NOT IN (
+                        SELECT room_id FROM Booking
+                        WHERE NOT (
+                            Booking.check_out_date <= ? OR
+                            Booking.check_in_date >= ?
+                        )
+                    )
                 """
-                results = self.fetchall(query, (city,))
-                hotels = []
+                params.extend([check_in_date.isoformat(), check_out_date.isoformat()])
 
-                for row in results:
-                    (
-                        room_id, room_number, description, max_guests, room_type_id,
-                        name, stars, price_per_night, hotel_id,
-                        address_id, street, city, zip_code
-                    ) = row
+            results = self.fetchall(query, tuple(params))
 
-                    room_type = RoomType(room_type_id, description, max_guests)
-                    room = Room(room_id, room_number, room_type, price_per_night)
-                    address = Address(address_id, street, city, zip_code)
+            hotels_dict = {}
+
+            for row in results:
+                (
+                    room_id, room_number, description, max_guests, room_type_id,
+                    price_per_night,
+                    name, stars, hotel_id,
+                    address_id, street, city, zip_code
+                ) = row
+
+                room_type = RoomType(room_type_id, description, max_guests)
+                room = Room(room_id, room_number, room_type, price_per_night)
+                address = Address(address_id, street, city, zip_code)
+
+                if hotel_id not in hotels_dict:
                     hotel = Hotel(hotel_id, name, stars, address)
-                    hotel.add_room(room)
+                    hotels_dict[hotel_id] = hotel
 
-                    hotels.append(hotel)
+                hotels_dict[hotel_id].add_room(room)
 
-                return hotels
+            return list(hotels_dict.values())
 
         def show_Information_per_room(self, nights:int) -> list[dict]:
             query = """
@@ -347,7 +372,6 @@ class HotelDataAccess(BaseDataAccess):
 
 
 
-
         def delete_hotel(self, hotel_id) -> bool:
             if not hotel_id:
                 raise ValueError("Hotel ID is required")
@@ -385,7 +409,7 @@ class HotelDataAccess(BaseDataAccess):
                 stars = stars,
                 address = address)
 
-        def get_dynamic_room_prices(self, check_in_date: str) -> list[dict]:
+        def get_dynamic_room_prices(self, check_in_date: date, check_out_date: date) -> list[dict]:
 
             query = """
                 SELECT
@@ -410,7 +434,7 @@ class HotelDataAccess(BaseDataAccess):
                 ORDER BY dynamic_price ASC
             """
 
-            results = self.fetchall(query, (check_in_date, check_in_date))
+            results = self.fetchall(query, (check_in_date, check_out_date))
             zimmerliste = []
 
             for row in results:
