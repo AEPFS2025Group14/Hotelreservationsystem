@@ -4,7 +4,7 @@ from email.mime.multipart import MIMEMultipart
 
 def send_booking_email(to_email, guest_name, hotel_name, check_in, check_out, total_amount):
     sender_email = "your@email.com"
-    password = "your-email-password"  # ⚠️ Achtung: Für Tests ggf. App-Passwort verwenden
+    password = "your-email-password"
 
     msg = MIMEMultipart()
     msg['From'] = sender_email

@@ -6,10 +6,6 @@ if TYPE_CHECKING:
     from .guest import Guest
 
 
-
-
-
-
 class Address:
     def __init__(self, address_id: int, street:str, city:str, zip_code:str, hotel : Hotel = None, guest :Guest = None):
         from model import Hotel
@@ -100,10 +96,6 @@ class Address:
 
     @hotel.setter
     def hotel(self, hotel:Hotel) -> None:
-        """Sets the hotel for this address
-        Also adds this address to the hotels address if it isn't already present.
-        If the address already belonged to a different hotel, it removes itself from that hotel.
-        Passing 'None' as the Hotel clears the current address"""
         from .hotel import Hotel
         if hotel is not None and not isinstance(hotel, Hotel):
             raise TypeError("hotel must be an instance of Hotel")

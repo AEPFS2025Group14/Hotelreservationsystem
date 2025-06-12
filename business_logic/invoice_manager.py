@@ -16,7 +16,6 @@ class InvoiceManager:
     def read_invoices_by_guest(self, guest: model.Guest) -> list[model.Invoice]:
         return self.__invoice_da.read_invoices_by_guest(guest)
 
-
     def create_invoice(booking_id: int, issue_date: str, total_amount: float, cursor=None):
         pass
 

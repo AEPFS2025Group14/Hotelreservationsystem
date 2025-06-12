@@ -167,7 +167,7 @@ class HotelDataAccess(BaseDataAccess):
                         ) = row
 
                     if max_guests_row < max_guests:
-                        continue  # Zimmer bietet nicht genug Platz
+                        continue
 
                     room_type = RoomType(room_type_id, description, max_guests_row)
                     room = Room(room_id, room_number, room_type, price_per_night)
@@ -181,7 +181,7 @@ class HotelDataAccess(BaseDataAccess):
                         existing_hotel = hotel_map[hotel_id]
                         existing_room = existing_hotel.rooms[0]
                         if room.price_per_night < existing_room.price_per_night:
-                            existing_hotel.rooms = [room]  # Günstigeres Zimmer ersetzen
+                            existing_hotel.rooms = [room]
 
                 return list(hotel_map.values())
 

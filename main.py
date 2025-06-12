@@ -22,20 +22,14 @@ def create_review_table():
 
 create_review_table()
 
-from data_access.queries import (
+from Login.queries import (
     search_hotels_by_city,
-    get_available_rooms,
-    book_room,
-    generate_invoice,
     add_hotel,
-    update_hotel,
     delete_hotel,
-    cancel_booking,
-    search_hotels_filtered,
-    get_room_details
+    cancel_booking
 )
 
-from data_access.queries import (
+from Login.queries import (
     search_hotels_by_city,
     get_available_rooms,
     book_room,
@@ -80,12 +74,12 @@ def main():
 if __name__ == "__main__":
     main()
 
-from data_access.queries import search_hotels_filtered
+from Login.queries import search_hotels_filtered
 
 results = search_hotels_filtered("Zürich", 4, 2, "2025-07-10", "2025-07-15")
 print(results)
 
-from data_access.queries import get_room_details
+from Login.queries import get_room_details
 
 rooms = get_room_details(1, "2025-07-10", "2025-07-15")
 print(rooms)

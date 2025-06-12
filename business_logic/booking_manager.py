@@ -7,7 +7,6 @@ from model import Guest, Room
 from business_logic.validation_functions import Validation_functions
 
 
-
 class InvalidBookingException(Exception):
     pass
 
