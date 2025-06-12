@@ -1,6 +1,7 @@
 
 
 import model
+import pandas as pd
 from model.room_type import RoomType
 from model.room import Room
 from .base_data_access import BaseDataAccess
@@ -457,8 +458,19 @@ class HotelDataAccess(BaseDataAccess):
 
             return zimmerliste
 
+        def get_room_type_popularity(self) -> pd.DataFrame:
+            query = """
+                SELECT rt.description AS room_type, COUNT(*) AS total_bookings
+                FROM Booking b
+                JOIN Room r ON b.room_id = r.room_id
+                JOIN Room_Type rt ON r.type_id = rt.type_id
+                WHERE b.is_cancelled = 0
+                GROUP BY rt.description
+            """
+            rows = self.fetchall(query)
 
 
-
+            df = pd.DataFrame(rows, columns=["room_type", "total_bookings"])
+            return df
 
 

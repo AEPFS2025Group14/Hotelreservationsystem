@@ -61,3 +61,6 @@ class BookingManager:
 
     def read_booking_by_id(self, booking_id: int) -> model.Booking | None:
        return  self.__booking_da.read_booking_by_id(booking_id)
+
+    def get_monthly_revenue(self) -> pd.DataFrame:
+        return self.__booking_da.get_monthly_revenue()

@@ -1,7 +1,6 @@
 from datetime import datetime, date
 import model
-from model import Hotel
-from model.room_type import RoomType
+import pandas as pd
 from model.address import Address
 import data_access
 from business_logic.room_type_manager import RoomTypeManager
@@ -108,3 +107,6 @@ class HotelManager:
             check_in_date=check_in.isoformat(),
             check_out_date=check_out.isoformat()
         )
+
+    def get_room_type_popularity(self) -> pd.DataFrame:
+        return self.__hotel_da.get_room_type_popularity()
