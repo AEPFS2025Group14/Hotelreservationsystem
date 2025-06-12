@@ -91,13 +91,13 @@ class BookingDataAccess(BaseDataAccess):
             booking_id, guest_id, room_id, check_in, check_out, cancelled, total = result
 
             total = total if total is not None else 0.0
-            # ✅ Datumsfelder prüfen und konvertieren
+
             if isinstance(check_in, str):
                 check_in = datetime.strptime(check_in, "%Y-%m-%d").date()
             if isinstance(check_out, str):
                 check_out = datetime.strptime(check_out, "%Y-%m-%d").date()
 
-            # ✅ Zuordnungen laden
+
             guest = self._guest_da.read_guest_by_id(guest_id)
             room = self._room_da.get_room_by_id(room_id)
 
