@@ -121,6 +121,178 @@ Katharina war für die iterative Entwicklung der User Stories, die Gestaltung de
 
 ---
 
+## 🧠 Verwendete Konzepte & Python-Prinzipien
+
+In der Umsetzung unseres Hotelreservierungssystems haben wir gezielt auf sauberen, wartbaren und idiomatischen Python-Code geachtet. Dabei kamen zahlreiche zentrale Programmierkonzepte und -prinzipien zum Einsatz, die wir im Folgenden strukturiert darstellen:
+
+### ✅ Funktionen & Strukturprinzipien
+
+- **Funktionen mit und ohne Rückgabewert**  
+  Zentrale Logik wurde über modularisierte Funktionen umgesetzt:  
+  z. B. `create_guest()`, `cancel_booking()`, `validate_city()` (in `guest_manager.py`, `validation_functions.py`).
+
+
+- **Parameter & Default Values**  
+  → `search_hotel_print_rooms(city, check_in_date=None, ...)` erlaubt flexible Funktionsaufrufe mit optionalen Parametern.
+
+
+- **KISS & DRY-Prinzipien**  
+  → Die **Validierungslogik** wurde in einer eigenen `validation_functions.py` ausgelagert.  
+  → Durch zentrale Managerklassen und Utility-Methoden vermeiden wir Wiederholungen und halten den Code klar und verständlich.
+
+---
+
+### ✅ Kontrollstrukturen
+
+- **if/elif-Logik**  
+  → Häufig verwendet z. B. in der Benutzerführung (`if buchung == "nein": ... elif ...`)  
+  → Besonders prominent in `main.py` und CLI-Menüs.
+
+
+- **Loops (for)**  
+  → Iteration über Hotels, Zimmer und Buchungen (z. B. `for h in hotels:`).  
+  → Einsatz z. B. in `hotel_manager.py`, `booking_manager.py`.
+
+---
+
+### ✅ Datenstrukturen & Typen
+
+- **Listen & Dictionaries**  
+  → Hotel-Listen, Buchungsübersichten etc. werden als `list[Hotel]`, `dict` strukturiert geführt.  
+  → `hotels_dict[hotel_id] = hotel` – für schnelles Mapping.
+
+
+- **Tuples & Rückgabewerte**  
+  → Verwendung von `(check_in, check_out)` als strukturierte Rückgabewerte.
+
+
+- **List Comprehension**  
+  → z. B. `active_bookings = [b for b in bookings if not b.is_cancelled]`
+
+---
+
+### ✅ Objektorientierung & Architektur
+
+- **Klassen & Objekte**  
+  → Umsetzung der zentralen Entitäten als OOP-Klassen (`Room`, `Hotel`, `Guest`, `Booking`, `Invoice`).
+
+
+- **Kapselung & Data Hiding**  
+  → Zugriff über Getter/Setter, interne Zustände durch `__` und `_` geschützt.  
+  → Z. B. `self._booking_da`, `self.__room_id`.
+
+
+- **Vererbung & Polymorphismus**  
+  → `BookingDataAccess(BaseDataAccess)` erbt und überschreibt Methoden (z. B. `fetchall()`).
+
+
+- **Aggregation / Komposition / Assoziation**  
+  → `Hotel` aggregiert `Address`, `Room` kompositionell mit `RoomType`, `Booking` assoziiert `Guest` und `Room`.
+
+---
+
+### ✅ Fehlerbehandlung
+
+- **try/except-Blöcke**  
+  → Robustheit durch saubere Fehlerbehandlung beim Datenbankzugriff, Input Parsing, Rechnungslogik.  
+  → Z. B. `ValueError`, `traceback.print_exc()` zur Nachvollziehbarkeit.
+
+---
+
+### ✅ Datenzugriff & Datenbanklogik
+
+- **SQLite-Integration**  
+  → Alle CRUD-Operationen in `*_data_access.py` über `sqlite3`.  
+  → Strukturierte Queries in `booking_data_access.py`, `hotel_data_access.py`.
+
+
+- **Kontextmanagement & File Handling**  
+  → `shutil.copyfile(...)` zur DB-Initialisierung, `with`-Kontext für Datenbankverbindungen.
+
+---
+
+### ✅ Visualisierung & Analyse
+
+- **Pandas**  
+  → Tabellenanzeige im Admin-Modul, z. B. Buchungsübersichten.
+
+
+- **Matplotlib (User Story 9 & 10)**  
+  → Diagramme für Zimmertyp-Nutzung und Umsatztrends.
+
+---
+
+### 🔎 Fazit: Codequalität & Prinzipientreue
+
+Unser Projekt orientiert sich bewusst an **Best Practices der Softwareentwicklung**. Besonders hervorzuheben:
+
+- **DRY (Don't Repeat Yourself)**  
+  → Wiederverwendbare Managerklassen und Validierungslogik.
+
+
+- **KISS (Keep It Simple, Stupid)**  
+  → Klare Methoden mit Einzelverantwortung, keine überkomplizierten Abhängigkeiten.
+
+
+- **Saubere Trennung der Ebenen**  
+  → `model/`, `data_access/`, `business_logic/`, `ui/` – konsequent strukturiert.
+
+> Damit demonstriert das Projekt nicht nur die Umsetzung der geforderten Funktionalitäten, sondern auch ein solides Verständnis moderner Python-Entwicklung im Sinne der Clean Code Prinzipien.
+
+---
+
+## ✅ Validierung als architektonisches Prinzip – Rolle der `validation_functions.py`
+
+Ein zentrales Qualitätsmerkmal unseres Systems ist die **systematische Entkopplung von Validierungslogik und fachlicher Geschäftsverarbeitung**. Dieser Anspruch manifestiert sich exemplarisch in der Datei `validation_functions.py`, die als zentrale Anlaufstelle für alle Eingabevalidierungen dient. Die Auslagerung in ein dediziertes Modul folgt nicht nur dem Prinzip der Wiederverwendbarkeit, sondern optimiert Wartbarkeit, Lesbarkeit und Fehlertoleranz im gesamten Codebestand.
+
+### 🔍 Vorteile auf Systemebene
+
+| Vorteil                           | Beschreibung |
+|----------------------------------|--------------|
+| **Wiederverwendbarkeit**         | Funktionen wie `validate_guest_data()` oder `parse_and_validate_dates()` sind universell einsetzbar – z. B. in `BookingManager`, `GuestManager` oder UI-Komponenten. |
+| **Reduktion von Redundanz (DRY)**| Durch Zentralisierung werden doppelte Validierungslogiken vermieden und die Kohärenz über Module hinweg gewährleistet. |
+| **Saubere Trennung (Separation of Concerns)** | Die Geschäftslogik bleibt schlank, da Prüfungen nicht in Manager- oder UI-Schichten eingebettet sind. |
+| **Fehlertoleranz & Debugging**   | Einheitlich strukturierte Fehlerausgaben (z. B. `ValueError`) erleichtern Identifikation und Behebung von Nutzungsfehlern. |
+| **Konsistente Nutzerführung**    | Benutzer erhalten standardisierte, verständliche Rückmeldungen – unabhängig davon, wo die Eingabe erfolgte. |
+
+### 🧠 Eingesetzte Programmierkonzepte
+
+Die Architektur der Validierungslogik basiert auf bewährten Prinzipien moderner Softwareentwicklung:
+
+- **Funktionen mit/ohne Rückgabewert**:  
+  Beispiel: `validate_name()` prüft ausschliesslich, während `normalize_city()` einen bereinigten String zurückliefert.
+
+
+- **Typisierte Rückgaben & Tuples**:  
+  `parse_and_validate_dates(...) → tuple[date, date]` erhöht die Lesbarkeit und Typensicherheit.
+
+
+- **Fehlerbehandlung via `try/except`**:  
+  Fehlerhafte Benutzereingaben lösen gezielte `ValueError`-Ausnahmen aus, die im Manager oder der UI-Schicht kontrolliert behandelt werden.
+
+
+- **Kapselung & Modularität**:  
+  Die Validierungen sind bewusst außerhalb der UI- und Logikebenen platziert, wodurch eine hohe Wiederverwendbarkeit und Austauschbarkeit gewährleistet ist.
+
+
+- **KISS-Prinzip (Keep It Simple, Stupid)**:  
+  Jede Funktion erfüllt exakt eine klar abgegrenzte Aufgabe – z. B. nur Datum validieren oder PLZ prüfen – und folgt dabei einer schlanken Methodensignatur.
+
+
+- **Defensive Programmierung**:  
+  Durch frühzeitige Abfangmechanismen wird sichergestellt, dass fehlerhafte Eingaben das System nicht in instabile Zustände bringen.
+
+
+- **Testbarkeit & Dokumentierbarkeit**:  
+  Die klar benannten Funktionen ermöglichen zielgerichtetes Unit-Testing und tragen zu einem dokumentierten, nachvollziehbaren Codebase bei.
+
+![img_3.png](img_3.png)
+![img_5.png](img_5.png)
+> **Abstract:** 
+> Die Datei `validation_functions.py` stellt damit nicht nur ein technisches Hilfsmittel dar, sondern verkörpert in ihrer Struktur und Funktion ein Schlüsselelement guter Softwarearchitektur: Sie unterstützt ein robustes, testbares und skalierbares Systemdesign – ganz im Sinne moderner Python-Entwicklung und professioneller Codequalität.
+
+---
+
 ## 🧠 Architektur (N-Tier Modell)
 
 Die Applikation folgt einer **mehrschichtigen Architektur (N-Tier)** zur logischen Trennung und besseren Wartbarkeit. Diese umfasst:
@@ -359,6 +531,127 @@ df.plot(kind="line", x="month", y="revenue", marker='o')
 ```
 > **Abstract:**  
 Diese Codebeispiele stehen exemplarisch für die Verbindung aus datenbankzentrierter Logik, robuster Geschäftsverarbeitung und benutzerfreundlicher Darstellung.
+
+---
+
+## 📋 Dokumentation ausgewählter User Stories
+
+### 🧾 User Story 5 – Interaktive Rechnungserstellung im Notebook
+
+Diese Komponente ermöglicht es dem Benutzer, basierend auf einer Buchungs-ID, eine Rechnung direkt im Jupyter Notebook zu generieren und als strukturiertes HTML-Dokument darzustellen. Die Implementierung folgt strikt dem Prinzip der Trennung von Verantwortlichkeiten (*Separation of Concerns*), um Lesbarkeit, Wartbarkeit und Wiederverwendbarkeit zu maximieren.
+
+#### Ablauf:
+
+- **Eingabe:**  
+  Eine gültige `booking_id` wird vom Benutzer über ein interaktives Eingabefeld eingegeben.
+
+
+- **Verarbeitung:**  
+  - Die zugehörige Buchung wird über den `BookingManager` geladen.  
+  - Die Rechnung wird durch den `InvoiceManager` erstellt, einschliesslich automatischer Berechnung der Aufenthaltsdauer und Gesamtkosten.
+
+
+- **Ausgabe:**  
+  - Die gerenderte Rechnung wird im Notebook als `IPython.display.HTML`-Objekt angezeigt.
+  - Felder wie Gastname, Datum, Preisstruktur und Gesamtbetrag sind visuell gegliedert und farblich hervorgehoben.
+
+
+#### Technische Besonderheiten:
+
+- **HTML-Ausgabe ausgelagert:**  
+  Die Klasse `InvoiceRenderer` (in `utils/invoicerender.py`) kapselt die gesamte Präsentationslogik.
+
+  
+- **OOP-Prinzipien:**  
+  - **Kapselung:** Manager-Klassen für Booking, Invoice, Guest und Room  
+  - **Aggregation:** Invoice → Booking → Guest, Room  
+  - **Modularität:** Die Funktion `display_invoice(invoice)` kann universell wiederverwendet werden.
+
+
+- **Fehlerbehandlung:**  
+  Sämtliche Laufzeitfehler (z. B. ungültige ID) werden mittels `try-except` abgefangen und benutzerfreundlich ausgegeben.
+
+![img_2.png](img_2.png)
+---
+
+### 🏨 User Story 4.2 – Buchung als unbekannter Gast (CLI)
+
+Dieser interaktive Ablauf verknüpft mehrere Komponenten des Systems zu einem durchgängigen Prozess, der es Gästen ermöglicht, ohne vorherige Registrierung ein Hotelzimmer zu buchen.
+
+#### Prozesslogik:
+
+- **Hotelsuche:**  
+  Auswahl nach Stadt und Sternebewertung, Anzeige via `pandas.DataFrame`.
+
+
+- **Hotelauswahl:**  
+  Anzeige verfügbarer Zimmer, deren IDs und Preise.
+
+
+- **Buchung:**  
+  - Eingabe von Zimmer-ID, Check-in/out-Daten und Gastinformationen  
+  - Validierung aller Eingaben  
+  - Erstellung eines `Booking`-Eintrags inkl. Berechnung des Gesamtpreises
+
+
+- **Ausgabe:**  
+  Bestätigung inklusive Buchungsnummer und Details wird im Terminal ausgegeben.
+
+#### Technische Umsetzung:
+
+- **Fehlerresistenz:**  
+  Umfassende Validierung und `try-except`-Block sichern Stabilität.
+
+
+- **OOP-basierte Architektur:**  
+  Verwendete Manager: `HotelManager`, `RoomManager`, `BookingManager`, `GuestManager`
+
+
+- **Datenbankzugriff:**  
+  Gekapselt über dedizierte Data Access Layer mit SQLite
+
+
+- **CLI-Integration:**  
+  Nahtlose Benutzerführung und Eingabelogik über `input()`-Sequenzen
+
+---
+
+### 🧮 User Story 10 – Stammdatenpflege via Widget-Dashboard
+
+Diese Komponente bildet ein Admin-Dashboard im Notebook, das die zentrale Pflege von Stammdaten erlaubt. Über `ipywidgets` lassen sich Änderungen an Zimmertypen, Preisen und Einrichtungen interaktiv durchführen.
+
+#### Moduleigenschaften:
+
+- **Anzeige:**  
+  - `show_all_bookings()` zeigt alle Buchungen tabellarisch  
+  - `show_rooms_with_facilities()` listet Zimmer samt Ausstattung
+
+
+- **Interaktive Verwaltung:**  
+  Eingabefelder für:
+  - Zimmertyp (ID, Beschreibung, max. Gäste)
+  - Einrichtungen (ID, neuer Name)
+  - Preis (Zimmer-ID, neuer Preis)
+
+#### Technischer Aufbau:
+
+- **Trennung von Logik & UI:**  
+  - Datenlogik liegt vollständig in den jeweiligen `*_Manager`-Klassen  
+  - GUI-Funktionen bleiben schlank und fokussiert
+
+
+- **OOP & Python-Konzepte:**  
+  - Rückgabewerte mit Typannotationen  
+  - Datenkapselung über Manager-Klassen  
+  - DRY-Prinzip durch zentrale Steuerung  
+  - Fehlerbehandlung per `try-except` in jedem Callback
+
+
+#### Benutzerfreundlichkeit:
+
+- Änderungen sind sofort wirksam und direkt sichtbar  
+- Nutzerführung erfolgt vollständig innerhalb des Notebooks  
+- Ausgaben und Fehlermeldungen werden im `Output()`-Widget angezeigt
 
 ---
 
