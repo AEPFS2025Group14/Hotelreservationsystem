@@ -9,7 +9,7 @@ Das Projekt wurde vollständig mit PyCharm umgesetzt, inkl. Versionsverwaltung �
 > **Abstract:**  
 Diese Arbeit demonstriert, wie sich reale Geschäftsprozesse – dargestellt durch User Stories – systematisch in Codestrukturen überführen lassen. Zum Einsatz kommen objektorientierte Programmierung, relationale Datenbanken (SQLite), Schichtentrennung (N-Tier Architektur) sowie Tools zur Visualisierung und PDF-Ausgabe.
 
-🎥 [Hier klicken, um unsere Projektpräsentation anzusehen](https://link-zu-eurem-video)
+🎥 https://teams.microsoft.com/l/meetingrecap?driveId=b%213UHOdc1fcEugCS4hMULQRdMromZwzplMgH9Lwwl2dlEvWqz8JtB3TqCzeUYHHtIX&driveItemId=01SK5EJHUXX4UPDJWTLZELIMYOGE7I4NW7&sitePath=https%3A%2F%2Ffhnw365-my.sharepoint.com%2F%3Av%3A%2Fg%2Fpersonal%2Fdaliah_beck_students_fhnw_ch%2FEZe_KPGm015ItDMOMT6ONt8BzXWvsRZSGz0f-9Q6Z5v09g&fileUrl=https%3A%2F%2Ffhnw365-my.sharepoint.com%2F%3Av%3A%2Fg%2Fpersonal%2Fdaliah_beck_students_fhnw_ch%2FEZe_KPGm015ItDMOMT6ONt8BzXWvsRZSGz0f-9Q6Z5v09g&threadId=19%3A1591b886-a329-422e-ad02-75ddde1b2ace_b10ff19c-ba2e-4cdf-9cef-2558d817c841%40unq.gbl.spaces&callId=7f2c99c7-fed1-4bd6-b343-feaaa7c05290&threadType=OneOnOneChat&meetingType=Unknown&subType=RecapSharingLink_RecapChiclet
 
 > In diesem Video demonstrieren wir unsere Lösung wie in einer Live-Präsentation.  
 > Wir zeigen exemplarisch zwei ausgewählte User Stories, die wir besonders gelungen finden, und erklären dabei jeweils die dahinterliegende Logik und den Code.  
