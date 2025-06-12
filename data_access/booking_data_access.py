@@ -178,7 +178,6 @@ class BookingDataAccess(BaseDataAccess):
         query = """
             SELECT 
                 b.booking_id,
-                b.booking_id,
                 b.check_in_date,
                 b.check_out_date,
                 b.is_cancelled,
@@ -235,3 +234,13 @@ class BookingDataAccess(BaseDataAccess):
             )
         return None
 
+    def get_monthly_revenue(self) -> pd.DataFrame:
+        query = """
+            SELECT strftime('%Y-%m', check_in_date) AS month, SUM(total_amount) AS revenue
+            FROM Booking
+            WHERE is_cancelled = 0
+            GROUP BY month
+            ORDER BY month
+        """
+        rows = self.fetchall(query)
+        return pd.DataFrame(rows, columns=["month", "revenue"])

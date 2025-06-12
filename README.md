@@ -283,6 +283,8 @@ Alle Eingaben (z. B. Stadtname, Sterne, Gästezahl) werden durch Funktionen in
 
 ---
 
+
+
 ## 💡 Hervorzuhebende Codebeispiele
 
 Im Rahmen der Umsetzung verschiedener User Stories wurden eine Reihe technischer Lösungen implementiert, die besonders hervorzuheben sind:
@@ -301,7 +303,7 @@ hotels = hotel_da.search_hotel_combinated(
 )
 ```
 ### 🧾 2. Preisberechnung & Rechnungserstellung (User Story 5)
-
+dsfa
 Die Rechnung wird basierend auf dem Zimmerpreis pro Nacht und der Aufenthaltsdauer erstellt und automatisch mit einem Zeitstempel versehen:
 
 ```python
