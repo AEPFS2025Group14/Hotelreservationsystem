@@ -27,7 +27,7 @@ class GuestDataAccess(BaseDataAccess):
         if result:
             guest_id, first_name, last_name, email, address_id = result
             if email is None:
-                email = ""  # Standardwert oder leerer String
+                email = ""
             address = self.__address_da.read_address_by_id(address_id) if address_id else None
             return model.Guest(guest_id, first_name, last_name, email, address)
         return None

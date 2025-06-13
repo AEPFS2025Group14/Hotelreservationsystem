@@ -56,11 +56,10 @@ class HotelManager:
         return self.__hotel_da.search_hotel_Aufenthalt(city, check_in.isoformat(), check_out.isoformat())
 
     def search_hotel_combinated(self, city: str, check_in_date: str, check_out_date: str,
-                                 min_stars: int = 0, max_guests: int = None) -> list[model.Hotel]:
+                                 min_stars: int = 1, max_guests: int = None) -> list[model.Hotel]:
 
         check_in, check_out = Validation_functions.parse_and_validate_dates(check_in_date, check_out_date)
         Validation_functions.validate_city(city)
-        Validation_functions.validate_stars(min_stars)
         Validation_functions.validate_max_guests(max_guests)
         city = Validation_functions.normalize_city(city)
         return self.__hotel_da.search_hotel_combinated(city, check_in_date, check_out_date, min_stars, max_guests)

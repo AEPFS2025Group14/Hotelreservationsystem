@@ -34,16 +34,13 @@ class HotelDataAccess(BaseDataAccess):
             return hotels
 
         def search_hotels_by_city_and_stars(self, city: str, stars: int) -> list[model.Hotel]:
-                print(f"DEBUG: city in DAO = {city}, stars = {stars}")
+
                 query = """ 
                     SELECT h.hotel_id, h.name, h.stars, a.address_id, a.city, a.street, a.zip_code
                     FROM Hotel h
                     JOIN Address a ON h.address_id = a.address_id
                     WHERE UPPER(a.city) = ? AND h.stars = ?
                     """
-
-
-                print(f"DEBUG SQL PARAMS: {city}, {stars}")
 
 
                 results = self.fetchall(query, (city.upper(), stars))
@@ -229,6 +226,7 @@ class HotelDataAccess(BaseDataAccess):
             if check_in_date and check_out_date:
                 query += """
                     AND Room.room_id NOT IN (
+                        SELECT room_id FROM Booking
                         SELECT room_id FROM Booking
                         WHERE NOT (
                             Booking.check_out_date <= ? OR

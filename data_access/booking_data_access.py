@@ -23,7 +23,7 @@ class BookingDataAccess(BaseDataAccess):
             guest: model.Guest,
             room: model.Room
     ) -> model.Booking:
-        print("DEBUG: is_cancelled type/value", type(is_cancelled), is_cancelled)
+
 
         if check_in_date is None:
             raise ValueError("check_in_date is required")
@@ -48,7 +48,7 @@ class BookingDataAccess(BaseDataAccess):
         params = (guest.guest_id, room.room_id, check_in_date, check_out_date, is_cancelled, total_amount)
         last_row_id, row_count = self.execute(sql, params)
 
-        print("DEBUG: Returning Booking with is_cancelled", is_cancelled)
+
         return model.Booking(
             booking_id=last_row_id,
             guest=guest,
