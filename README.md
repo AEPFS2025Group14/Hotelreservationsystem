@@ -1,6 +1,6 @@
 # Hotel Reservation System – AEP Projekt (FS2025)
 
-## 🧾 Projektbeschreibung
+## Projektbeschreibung
 
 Dieses Projekt wurde im Rahmen des Moduls *Anwendungsentwicklung mit Python* (AEP, FS2025) an der Hochschule für Wirtschaft FHNW umgesetzt.  
 Ziel ist die exemplarische Implementierung eines Hotelreservierungssystems unter Einsatz moderner Python-Technologien, modularer Softwarearchitektur und relationaler Datenhaltung.
@@ -18,9 +18,9 @@ Diese Arbeit demonstriert, wie sich reale Geschäftsprozesse – dargestellt dur
 
 ---
 
-## 👤 Rollen
+## Rollen
 
-### 👩‍💻 Daliah Beck  
+### Daliah Beck  
 **Rolle: Architektur, Datenmodellierung, Datenzugriff, Geschäftslogik, Dokumentation**
 
 Daliah war verantwortlich für die technische Grundlage und den Aufbau des Hotelreservierungssystems. Ihr Fokus lag auf der initialen Projektstruktur, der Implementierung der Datenmodelle, dem Datenbankzugriff, zentraler Geschäftslogik sowie der vollständigen schriftlichen Dokumentation.
@@ -68,7 +68,7 @@ Daliah war verantwortlich für die technische Grundlage und den Aufbau des Hotel
   - Verfasserin der **README.md-Dokumentation**
 
 
-### 👩 Katharina Hagen  
+### Katharina Hagen  
 **Rolle: User Stories, UI/UX, Testing, Versionskontrolle, CLI-Interaktion**
 
 Katharina war für die iterative Entwicklung der User Stories, die Gestaltung der Benutzerführung sowie für Eingabelogik, Testing und Repository-Pflege zuständig. Sie arbeitete kontinuierlich an der Verbesserung der funktionalen Abläufe und sorgte für eine konsistente Ausführung der Anforderungen in der CLI.
@@ -121,11 +121,11 @@ Katharina war für die iterative Entwicklung der User Stories, die Gestaltung de
 
 ---
 
-## 🧠 Verwendete Konzepte & Python-Prinzipien
+## Verwendete Konzepte & Python-Prinzipien
 
 In der Umsetzung unseres Hotelreservierungssystems haben wir gezielt auf sauberen, wartbaren und idiomatischen Python-Code geachtet. Dabei kamen zahlreiche zentrale Programmierkonzepte und -prinzipien zum Einsatz, die wir im Folgenden strukturiert darstellen:
 
-### ✅ Funktionen & Strukturprinzipien
+### Funktionen & Strukturprinzipien
 
 - **Funktionen mit und ohne Rückgabewert**  
   Zentrale Logik wurde über modularisierte Funktionen umgesetzt:  
@@ -142,7 +142,7 @@ In der Umsetzung unseres Hotelreservierungssystems haben wir gezielt auf saubere
 
 ---
 
-### ✅ Kontrollstrukturen
+### Kontrollstrukturen
 
 - **if/elif-Logik**  
   → Häufig verwendet z. B. in der Benutzerführung (`if buchung == "nein": ... elif ...`)  
@@ -155,7 +155,7 @@ In der Umsetzung unseres Hotelreservierungssystems haben wir gezielt auf saubere
 
 ---
 
-### ✅ Datenstrukturen & Typen
+### Datenstrukturen & Typen
 
 - **Listen & Dictionaries**  
   → Hotel-Listen, Buchungsübersichten etc. werden als `list[Hotel]`, `dict` strukturiert geführt.  
@@ -171,7 +171,7 @@ In der Umsetzung unseres Hotelreservierungssystems haben wir gezielt auf saubere
 
 ---
 
-### ✅ Objektorientierung & Architektur
+### Objektorientierung & Architektur
 
 - **Klassen & Objekte**  
   → Umsetzung der zentralen Entitäten als OOP-Klassen (`Room`, `Hotel`, `Guest`, `Booking`, `Invoice`).
@@ -191,7 +191,7 @@ In der Umsetzung unseres Hotelreservierungssystems haben wir gezielt auf saubere
 
 ---
 
-### ✅ Fehlerbehandlung
+### Fehlerbehandlung
 
 - **try/except-Blöcke**  
   → Robustheit durch saubere Fehlerbehandlung beim Datenbankzugriff, Input Parsing, Rechnungslogik.  
@@ -199,7 +199,7 @@ In der Umsetzung unseres Hotelreservierungssystems haben wir gezielt auf saubere
 
 ---
 
-### ✅ Datenzugriff & Datenbanklogik
+### Datenzugriff & Datenbanklogik
 
 - **SQLite-Integration**  
   → Alle CRUD-Operationen in `*_data_access.py` über `sqlite3`.  
@@ -211,7 +211,7 @@ In der Umsetzung unseres Hotelreservierungssystems haben wir gezielt auf saubere
 
 ---
 
-### ✅ Visualisierung & Analyse
+### Visualisierung & Analyse
 
 - **Pandas**  
   → Tabellenanzeige im Admin-Modul, z. B. Buchungsübersichten.
@@ -222,7 +222,7 @@ In der Umsetzung unseres Hotelreservierungssystems haben wir gezielt auf saubere
 
 ---
 
-### 🔎 Fazit: Codequalität & Prinzipientreue
+### Fazit: Codequalität & Prinzipientreue
 
 Unser Projekt orientiert sich bewusst an **Best Practices der Softwareentwicklung**. Besonders hervorzuheben:
 
@@ -241,11 +241,11 @@ Unser Projekt orientiert sich bewusst an **Best Practices der Softwareentwicklun
 
 ---
 
-## ✅ Validierung als architektonisches Prinzip – Rolle der `validation_functions.py`
+## Validierung als architektonisches Prinzip – Rolle der `validation_functions.py`
 
 Ein zentrales Qualitätsmerkmal unseres Systems ist die **systematische Entkopplung von Validierungslogik und fachlicher Geschäftsverarbeitung**. Dieser Anspruch manifestiert sich exemplarisch in der Datei `validation_functions.py`, die als zentrale Anlaufstelle für alle Eingabevalidierungen dient. Die Auslagerung in ein dediziertes Modul folgt nicht nur dem Prinzip der Wiederverwendbarkeit, sondern optimiert Wartbarkeit, Lesbarkeit und Fehlertoleranz im gesamten Codebestand.
 
-### 🔍 Vorteile auf Systemebene
+### Vorteile auf Systemebene
 
 | Vorteil                           | Beschreibung |
 |----------------------------------|--------------|
@@ -255,7 +255,7 @@ Ein zentrales Qualitätsmerkmal unseres Systems ist die **systematische Entkoppl
 | **Fehlertoleranz & Debugging**   | Einheitlich strukturierte Fehlerausgaben (z. B. `ValueError`) erleichtern Identifikation und Behebung von Nutzungsfehlern. |
 | **Konsistente Nutzerführung**    | Benutzer erhalten standardisierte, verständliche Rückmeldungen – unabhängig davon, wo die Eingabe erfolgte. |
 
-### 🧠 Eingesetzte Programmierkonzepte
+### Eingesetzte Programmierkonzepte
 
 Die Architektur der Validierungslogik basiert auf bewährten Prinzipien moderner Softwareentwicklung:
 
@@ -293,7 +293,7 @@ Die Architektur der Validierungslogik basiert auf bewährten Prinzipien moderner
 
 ---
 
-## 🧠 Architektur (N-Tier Modell)
+## Architektur (N-Tier Modell)
 
 Die Applikation folgt einer **mehrschichtigen Architektur (N-Tier)** zur logischen Trennung und besseren Wartbarkeit. Diese umfasst:
 
@@ -320,7 +320,7 @@ Implementiert Geschäftsregeln, Validierungen und komplexe Abläufe wie die Rech
 
 ---
 
-## 📐 Klassendiagramm
+## Klassendiagramm
 
 Das Klassendiagramm zeigt die Beziehungen der zentralen Entitäten im System – inklusive:
 
@@ -334,7 +334,7 @@ Das Klassendiagramm zeigt die Beziehungen der zentralen Entitäten im System –
 
 ---
 
-## 📖 Anleitung zur Nutzung der Applikation (CLI)
+## Anleitung zur Nutzung der Applikation (CLI)
 
 ### Voraussetzungen
 
@@ -418,7 +418,7 @@ Alle Eingaben (z. B. Stadtname, Sterne, Gästezahl) werden durch Funktionen in
 
 ---
 
-## 🔍 Annahmen & Interpretationen
+## Annahmen & Interpretationen
 
 - **Preiskalkulation:**  
   Der Preis pro Nacht wird direkt aus der Spalte `price_per_night` in der Tabelle `Room` übernommen. Es gibt keine dynamische oder saisonale Preisgestaltung. Der Gesamtbetrag (`total_amount`) ergibt sich durch Multiplikation mit der Anzahl Nächte.
@@ -457,11 +457,11 @@ Alle Eingaben (z. B. Stadtname, Sterne, Gästezahl) werden durch Funktionen in
 
 
 
-## 💡 Hervorzuhebende Codebeispiele
+## Hervorzuhebende Codebeispiele
 
 Im Rahmen der Umsetzung verschiedener User Stories wurden eine Reihe technischer Lösungen implementiert, die besonders hervorzuheben sind:
 
-### 🔍 1. Dynamische Hotel- und Zimmerfilter (User Story 1.5)
+### 1. Dynamische Hotel- und Zimmerfilter (User Story 1.5)
 
 Hotels können anhand einer Kombination aus Stadt, Zeitraum, Sternebewertung und Gästeanzahl gesucht werden. Die Kombination dieser Parameter führt zu einer präzisen Verfügbarkeitssuche:
 
@@ -474,7 +474,7 @@ hotels = hotel_da.search_hotel_combinated(
     max_guests=guest_count
 )
 ```
-### 🧾 2. Preisberechnung & Rechnungserstellung (User Story 5)
+### 2. Preisberechnung & Rechnungserstellung (User Story 5)
 dsfa
 Die Rechnung wird basierend auf dem Zimmerpreis pro Nacht und der Aufenthaltsdauer erstellt und automatisch mit einem Zeitstempel versehen:
 
@@ -486,7 +486,7 @@ invoice = invoice_da.create_new_invoice(
     issue_date=issue_date
 )
 ```
-### ❌ 3. Stornierung mit automatischer Rechnungskorrektur (User Story 6)
+### 3. Stornierung mit automatischer Rechnungskorrektur (User Story 6)
 
 Bereits fakturierte Buchungen können storniert und auf null gesetzt werden – inklusive Prüfung, ob bereits eine Stornierung erfolgt ist:
 
@@ -498,7 +498,7 @@ else:
     invoice_da.update_invoice_total(invoice["invoice_id"], 0.00)
 ```
 
-### 📊 4. Datenvisualisierung: Beliebteste Zimmertypen (User Story 9)
+### 4. Datenvisualisierung: Beliebteste Zimmertypen (User Story 9)
 
 Mit pandas und matplotlib wurde ein Balkendiagramm zur Darstellung der gebuchten Zimmertypen erstellt:
 
@@ -515,7 +515,7 @@ df = pd.read_sql_query(query, conn)
 df.plot(kind="bar", x="room_type", y="total_bookings")
 ```
 
-### 📈 5. Umsatzanalyse nach Monaten (User Story 10)
+### 5. Umsatzanalyse nach Monaten (User Story 10)
 
 Der monatliche Umsatz wird über SQL extrahiert und als Liniendiagramm visualisiert:
 
@@ -534,9 +534,9 @@ Diese Codebeispiele stehen exemplarisch für die Verbindung aus datenbankzentrie
 
 ---
 
-## 📋 Dokumentation ausgewählter User Stories
+## Dokumentation ausgewählter User Stories
 
-### 🧾 User Story 5 – Interaktive Rechnungserstellung im Notebook
+### User Story 5 – Interaktive Rechnungserstellung im Notebook
 
 Diese Komponente ermöglicht es dem Benutzer, basierend auf einer Buchungs-ID, eine Rechnung direkt im Jupyter Notebook zu generieren und als strukturiertes HTML-Dokument darzustellen. Die Implementierung folgt strikt dem Prinzip der Trennung von Verantwortlichkeiten (*Separation of Concerns*), um Lesbarkeit, Wartbarkeit und Wiederverwendbarkeit zu maximieren.
 
@@ -574,7 +574,7 @@ Diese Komponente ermöglicht es dem Benutzer, basierend auf einer Buchungs-ID, e
 ![img_2.png](img_2.png)
 ---
 
-### 🏨 User Story 4.2 – Buchung als unbekannter Gast (CLI)
+### User Story 4.2 – Buchung als unbekannter Gast (CLI)
 
 Dieser interaktive Ablauf verknüpft mehrere Komponenten des Systems zu einem durchgängigen Prozess, der es Gästen ermöglicht, ohne vorherige Registrierung ein Hotelzimmer zu buchen.
 
@@ -616,7 +616,7 @@ Dieser interaktive Ablauf verknüpft mehrere Komponenten des Systems zu einem du
 
 ---
 
-### 🧮 User Story 10 – Stammdatenpflege via Widget-Dashboard
+### User Story 10 – Stammdatenpflege via Widget-Dashboard
 
 Diese Komponente bildet ein Admin-Dashboard im Notebook, das die zentrale Pflege von Stammdaten erlaubt. Über `ipywidgets` lassen sich Änderungen an Zimmertypen, Preisen und Einrichtungen interaktiv durchführen.
 
@@ -655,7 +655,33 @@ Diese Komponente bildet ein Admin-Dashboard im Notebook, das die zentrale Pflege
 
 ---
 
-## 🧠 Reflexion
+## Lessons Learned
+
+Im Rahmen der Entwicklung unseres Hotelreservierungssystems haben wir nicht nur eine Vielzahl an technischen Fähigkeiten vertieft, sondern auch konkrete methodische und architektonische Erkenntnisse gewonnen, die für zukünftige Projekte von hohem Wert sind:
+
+### 1. Architekturentscheidungen haben langfristige Auswirkungen  
+Die Entscheidung für eine saubere **N-Tier-Architektur** (Model, Data Access, Business Logic, UI) hat sich in allen Projektphasen als strategisch richtig erwiesen. Diese Schichtung fördert Wartbarkeit, ermöglicht paralleles Arbeiten und reduziert technische Schulden – ein Prinzip, das wir in künftigen Systemdesigns standardmässig anwenden würden.
+
+### 2. Frühzeitige Validierungslogik steigert Systemrobustheit  
+Die Auslagerung von Validierungen in ein zentrales Modul (`validation_functions.py`) hat nicht nur die Testbarkeit verbessert, sondern auch die Wiederverwendbarkeit massiv erhöht. Eine saubere Trennung zwischen Eingabeprüfung und Geschäftslogik verhindert Side-Effects und erleichtert die Fehlersuche erheblich.
+
+### 3. Testdatenmanagement ist erfolgskritisch  
+Durch die konsequente Verwendung einer duplizierten Arbeitsdatenbank (`working_db.db`) konnten wir Wiederholbarkeit und Testisolierung sicherstellen. Dieses Vorgehen erwies sich als essenziell für stabile Testläufe und kontrollierte Validierung von SQL-Operationen.
+
+### 4. Modularisierung beschleunigt Entwicklungszyklen  
+Die bewusste Modularisierung – insbesondere durch spezialisierte Managerklassen – ermöglichte es uns, neue Features iterativ und isoliert zu entwickeln. Funktionen wie die Rechnungserstellung oder Stammdatenpflege konnten dadurch schnell prototypisch realisiert und verfeinert werden.
+
+### 5. Codeverständlichkeit schlägt Komplexität  
+Gerade in einem kollaborativen Kontext zeigte sich, dass lesbarer, klar strukturierter Code produktiver ist als vermeintlich „clevere“ Lösungen. Wir haben gezielt auf **KISS** und **DRY** geachtet – Prinzipien, die nicht nur die Entwicklung vereinfachten, sondern auch unsere Zusammenarbeit effizient gestalteten.
+
+### 6. Dokumentation ist kein Nachgedanke  
+Die kontinuierliche Pflege einer strukturierten Dokumentation – sowohl im Code als auch im README – hat wesentlich dazu beigetragen, den Überblick über Abhängigkeiten, Schnittstellen und Verantwortlichkeiten zu behalten. Dokumentation wurde bei uns nicht als Abschluss, sondern als integraler Bestandteil der Entwicklung verstanden.
+
+> Diese Lessons Learned stellen keine abstrakten Theorien dar, sondern konkrete Erkenntnisse, die sich im Verlauf unseres Entwicklungsprozesses herauskristallisiert haben – und die wir als Fundament zukünftiger Softwareprojekte mitnehmen.
+
+---
+
+## Reflexion
 
 Zu Beginn des Projekts waren wir ursprünglich zu dritt in einer Gruppe. Nachdem sich die Gruppenkonstellation geändert hatte, haben wir (Daliah Beck und Katharina Hagen) das Projekt als Zweierteam eigenständig neu aufgesetzt – mit dem klaren Ziel, eine robuste und vollständig funktionsfähige Lösung für ein Hotelreservierungssystem zu entwickeln.
 
